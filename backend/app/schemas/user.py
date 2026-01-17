@@ -1,32 +1,57 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field, field_validator
 from typing import Optional
+from datetime import datetime
 
 
 class UserBase(BaseModel):
+    """Campos comunes (sin password ni created_at)"""
+    username: str = Field(..., min_length=3, max_length=50)
     email: EmailStr
-    username: str
-    full_name: Optional[str] = None
-    is_active: bool = True
+    full_name: str = Field(..., min_length=1)
+    is_active: bool = Field(default=True)
+    role: str = Field(default="user", pattern="^(user|admin)$")
 
 
 class UserCreate(UserBase):
-    password: str
+    """Para crear usuarios - incluye password"""
+    password: str = Field(..., min_length=8)
+    
+    @field_validator('password')
+    def password_strength(cls, v):
+        if not any(c.isupper() for c in v):
+            raise ValueError('Debe tener al menos una mayúscula')
+        if not any(c.isdigit() for c in v):
+            raise ValueError('Debe tener al menos un número')
+        return v
 
 
-class UserUpdate(UserBase):
-    password: Optional[str] = None
+class UserUpdate(BaseModel):
+    """Para actualizar - todos opcionales"""
+    username: Optional[str] = Field(None, min_length=3, max_length=50)
+    email: Optional[EmailStr] = None
+    full_name: Optional[str] = Field(None, min_length=1)
+    password: Optional[str] = Field(None, min_length=8)
+    is_active: Optional[bool] = None
+    role: Optional[str] = Field(None, pattern="^(user|admin)$")
 
 
 class UserInDB(UserBase):
+    """En DB - incluye id, created_at, hashed_password"""
     id: int
-    is_superuser: bool
+    hashed_password: str  # Guardas el hash, no el password
+    created_at: datetime
     
     class Config:
         from_attributes = True
 
 
-class User(UserInDB):
-    pass
+class User(UserBase):
+    """Respuesta API - sin password"""
+    id: int
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
 
 
 class Token(BaseModel):

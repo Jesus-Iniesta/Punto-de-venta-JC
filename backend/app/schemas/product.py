@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from typing import Optional
 from datetime import datetime
 
@@ -15,7 +15,11 @@ class ProductBase(BaseModel):
 
 class ProductCreate(ProductBase):
     """Schema para crear un nuevo producto (POST request)"""
-    pass
+    @field_validator('price')
+    def price_must_be_reasonable(cls, v):
+        if v > 1000000:
+            raise ValueError('El precio parece demasiado alto')
+        return v
 
 
 class ProductUpdate(BaseModel):
