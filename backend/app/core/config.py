@@ -1,32 +1,48 @@
 from pydantic_settings import BaseSettings
 from typing import List
+from pydantic import field_validator
 
 
 class Settings(BaseSettings):
-    PROJECT_NAME: str = "Punto de Venta API"
-    API_V1_STR: str = "/api/v1"
+    PROJECT_NAME: str
+    API_V1_STR: str
     
-    # Database
-    POSTGRES_SERVER: str = "db"
-    POSTGRES_USER: str = "postgres"
-    POSTGRES_PASSWORD: str = "postgres"
-    POSTGRES_DB: str = "punto_venta"
+    # Database - Sin valores por defecto, deben estar en .env
+    POSTGRES_SERVER: str
+    POSTGRES_USER: str
+    POSTGRES_PASSWORD: str
+    POSTGRES_DB: str
     
     @property
     def DATABASE_URL(self) -> str:
         return f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_SERVER}/{self.POSTGRES_DB}"
     
-    # Security
-    SECRET_KEY: str = "your-secret-key-change-this-in-production"
+    # Security - Sin valores por defecto inseguros
+    SECRET_KEY: str
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
     # CORS
     BACKEND_CORS_ORIGINS: List[str] = ["http://localhost:5173", "http://localhost:3000"]
     
+    @field_validator('SECRET_KEY')
+    def validate_secret_key(cls, v):
+        if len(v) < 32:
+            raise ValueError('SECRET_KEY debe tener al menos 32 caracteres')
+        if v in ['your-secret-key-change-this-in-production', 'changeme', 'secret']:
+            raise ValueError('SECRET_KEY no puede usar valores por defecto')
+        return v
+    
+    @field_validator('POSTGRES_PASSWORD')
+    def validate_password(cls, v):
+        if len(v) < 8:
+            raise ValueError('POSTGRES_PASSWORD debe tener al menos 8 caracteres')
+        return v
+    
     class Config:
         case_sensitive = True
         env_file = ".env"
+        env_file_encoding = 'utf-8'
 
 
 settings = Settings()
