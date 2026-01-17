@@ -1,5 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float, Boolean
+from sqlalchemy.orm import relationship
 from app.db.base import Base
+from sqlalchemy.sql.sqltypes import TIMESTAMP
 
 
 class Product(Base):
@@ -10,5 +12,8 @@ class Product(Base):
     description = Column(String)
     price = Column(Float, nullable=False)
     stock = Column(Integer, default=0)
-    sku = Column(String, unique=True, index=True)
     is_active = Column(Boolean, default=True)
+    created_at = Column(TIMESTAMP, nullable=False)
+    
+    # Relaciones
+    sales = relationship("Sales", back_populates="product")
