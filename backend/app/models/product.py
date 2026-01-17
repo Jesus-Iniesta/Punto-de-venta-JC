@@ -12,6 +12,7 @@ class Product(Base):
     description = Column(String)
     price = Column(Float, nullable=False)
     stock = Column(Integer, default=0)
+    image_url = Column(String)
     is_active = Column(Boolean, default=True)
     created_at = Column(TIMESTAMP, nullable=False)
     
