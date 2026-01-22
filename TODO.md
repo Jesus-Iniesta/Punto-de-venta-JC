@@ -36,26 +36,26 @@
 
 ### Modelos
 - [x] Modelo Product existente
-- [ ] Agregar campo `cost_price` (precio de costo/inversión)
-- [ ] Agregar campo `profit_margin` (margen de ganancia en %)
+- [x] Agregar campo `cost_price` (precio de costo/inversión)
+- [x] Agregar campo `profit_margin` (margen de ganancia en %)
 
 ### Endpoints Necesarios
 
-- [ ] **POST /api/v1/products/** - Crear producto
+- [x] **POST /api/v1/products/** - Crear producto
   - Validar que el nombre no exista
   - Calcular precio de venta automático si se proporciona costo y margen
   - Subir imagen del producto (opcional)
 
-- [ ] **GET /api/v1/products/** - Listar productos
+- [x] **GET /api/v1/products/** - Listar productos
   - Paginación (skip, limit)
   - Filtros: activos/inactivos, búsqueda por nombre
   - Ordenar por: nombre, precio, stock
 
-- [ ] **GET /api/v1/products/{product_id}** - Obtener producto específico
+- [x] **GET /api/v1/products/{product_id}** - Obtener producto específico
   - Incluir información de ventas recientes
   - Calcular ganancia potencial
 
-- [ ] **PUT /api/v1/products/{product_id}** - Actualizar producto
+- [x] **PUT /api/v1/products/{product_id}** - Actualizar producto
   - Validar cambios de precio
   - Registrar historial de cambios de precio (opcional)
 
@@ -63,13 +63,13 @@
   - Cambiar `is_active` a False
   - No permitir eliminar si tiene ventas pendientes
 
-- [ ] **PATCH /api/v1/products/{product_id}/stock** - Actualizar stock
+- [x] **PATCH /api/v1/products/{product_id}/stock** - Actualizar stock
   - Incrementar/decrementar stock manualmente
   - Registrar ajustes de inventario
 
 ### Validaciones
-- [ ] Stock no puede ser negativo
-- [ ] Precio debe ser mayor a costo
+- [x] Stock no puede ser negativo
+- [x] Precio debe ser mayor a costo
 - [ ] No permitir vender productos sin stock
 
 ---
