@@ -7,6 +7,8 @@ from app.core.config import settings
 from app.db.database import get_db
 from app.models.user import User
 from app.schemas.user import TokenData
+from app.models.sales import Sales
+from app.schemas.sales import SaleStatus
 
 # OAuth2 scheme para extraer el token del header Authorization
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
@@ -78,3 +80,22 @@ def require_admin(
             detail="No tienes permisos de administrador para realizar esta acción"
         )
     return current_user
+
+def validate_pending_sale_in_product(
+    product_id: int,
+    db: Session = Depends(get_db)
+) -> Sales:
+    """
+    Dependency para validar que una venta esté en estado PENDING o PARTIAL 
+    para no poder eliminar un producto asociado.
+    """
+    product_sales = db.query(Sales).filter(
+        Sales.product_id == product_id,
+        Sales.status.in_([SaleStatus.PENDING, SaleStatus.PARTIAL])
+    ).first()
+    if product_sales:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No se puede eliminar el producto porque tiene ventas pendientes o parciales asociadas"
+        )
+    return product_sales

@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from app.db.database import get_db
 from app.models.product import Product as ProductModel
 from app.schemas.product import Product, ProductCreate, ProductUpdate
-from app.core.dependencies import get_current_active_user, require_admin
+from app.core.dependencies import get_current_active_user, require_admin, validate_pending_sale_in_product
 from app.models.user import User as UserModel
 
 router = APIRouter()
@@ -319,6 +319,8 @@ def delete_product(product_id: int, db: Session = Depends(get_db),
     
     # Verificar permisos de admin
     require_admin(current_user)
+    #Verificar que no existan ventas PENDING o PARTIAL asociadas al producto
+    validate_pending_sale_in_product(product_id, db)
     try:
         db_product.is_active = False  # Desactivar en lugar de eliminar
         db.commit()

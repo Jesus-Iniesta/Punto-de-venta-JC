@@ -1,3 +1,4 @@
+from datetime import datetime as DateTime
 from sqlalchemy import Column, Integer, Text, String, Boolean
 from sqlalchemy.orm import relationship
 from app.db.base import Base
@@ -10,4 +11,7 @@ class Sellers(Base):
     name = Column(String, index=True, nullable=False)
     contact_info = Column(Text)
     is_active = Column(Boolean, default=True)
-    created_at = Column(TIMESTAMP, nullable=False)
+    created_at = Column(TIMESTAMP, nullable=False, default=DateTime.now)
+    
+    # Relaciones
+    sales = relationship("Sales", back_populates="seller")

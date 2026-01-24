@@ -9,7 +9,7 @@ class ProductBase(BaseModel):
     description: Optional[str] = Field(None, description="Descripción del producto")
     cost_price: float = Field(..., gt=0, description="Precio de costo/inversión")
     price: Optional[float] = Field(None, gt=0, description="Precio de venta (se calcula automáticamente si no se proporciona)")
-    profit_margin: Optional[float] = Field(None, ge=0, le=100, description="Margen de ganancia en % (0-100)")
+    profit_margin: Optional[float] = Field(None, ge=0, le=1000, description="Margen de ganancia en % (0-1000)")
     stock: int = Field(default=0, ge=0, description="Cantidad en inventario")
     image_url: Optional[str] = Field(None, description="URL de la imagen del producto")
     is_active: bool = Field(default=True, description="Si el producto está activo")
@@ -31,8 +31,8 @@ class ProductCreate(ProductBase):
     
     @field_validator('profit_margin')
     def validate_profit_margin(cls, v):
-        if v is not None and (v < 0 or v > 100):
-            raise ValueError('El margen de ganancia debe estar entre 0 y 100%')
+        if v is not None and (v < 0 or v > 1000):
+            raise ValueError('El margen de ganancia debe estar entre 0 y 1000%')
         return v
 
 
@@ -43,7 +43,7 @@ class ProductUpdate(BaseModel):
     description: Optional[str] = Field(None, description="Descripción del producto")
     cost_price: Optional[float] = Field(None, gt=0, description="Precio de costo/inversión")
     price: Optional[float] = Field(None, gt=0, description="Precio de venta")
-    profit_margin: Optional[float] = Field(None, ge=0, le=100, description="Margen de ganancia en %")
+    profit_margin: Optional[float] = Field(None, ge=0, le=1000, description="Margen de ganancia en %")
     stock: Optional[int] = Field(None, ge=0, description="Cantidad en inventario")
     image_url: Optional[str] = Field(None, description="URL de la imagen del producto")
     is_active: Optional[bool] = Field(None, description="Si el producto está activo")

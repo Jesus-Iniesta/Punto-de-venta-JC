@@ -12,7 +12,7 @@ class Product(Base):
     description = Column(String)
     price = Column(Float, nullable=False)
     cost_price = Column(Float, nullable=False)
-    profit_margin = Column(Float)
+    profit_margin = Column(Float, default=0.0)
     stock = Column(Integer, default=0)
     image_url = Column(String)
     is_active = Column(Boolean, default=True)
