@@ -94,11 +94,35 @@ class Sale(SaleInDB):
     pass
 
 
+class ProductInfo(BaseModel):
+    """Información del producto en la venta"""
+    id: int
+    name: str
+    description: Optional[str]
+    cost_price: float
+    price: float
+    image_url: Optional[str]
+    
+    class Config:
+        from_attributes = True
+
+
+class SellerInfo(BaseModel):
+    """Información del vendedor en la venta"""
+    id: int
+    name: str
+    contact_info: Optional[str]
+    
+    class Config:
+        from_attributes = True
+
+
 class SaleWithDetails(Sale):
-    """Schema de respuesta con detalles del producto y vendedor"""
-    product_name: Optional[str] = Field(None, description="Nombre del producto")
-    seller_name: Optional[str] = Field(None, description="Nombre del vendedor")
-    profit: Optional[float] = Field(None, description="Ganancia de la venta")
+    """Schema de respuesta con detalles completos del producto, vendedor y cálculos de ganancia"""
+    product: ProductInfo = Field(..., description="Información detallada del producto")
+    seller: SellerInfo = Field(..., description="Información del vendedor")
+    profit: float = Field(..., description="Ganancia de la venta (precio de venta - costo)")
+    profit_margin_percentage: float = Field(..., description="Porcentaje de ganancia")
     
     class Config:
         from_attributes = True

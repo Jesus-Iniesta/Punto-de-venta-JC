@@ -105,16 +105,16 @@ Agregar campos al modelo `Sales`:
   - Paginación
   - Totales: ventas completadas, pendientes, parciales
 
-- [ ] **GET /api/v1/sales/{sale_id}** - Obtener venta específica
+- [x] **GET /api/v1/sales/{sale_id}** - Obtener venta específica
   - Incluir detalles del producto
   - Historial de pagos
   - Información del vendedor
 
-- [ ] **PUT /api/v1/sales/{sale_id}** - Actualizar venta
+- [x] **PUT /api/v1/sales/{sale_id}** - Actualizar venta
   - Solo permitir si status es PENDING o PARTIAL
   - No permitir cambiar productos si ya hay pagos
 
-- [ ] **PATCH /api/v1/sales/{sale_id}/payment** - Registrar pago
+- [x] **PATCH /api/v1/sales/{sale_id}/payment** - Registrar pago
   - Agregar monto al `amount_paid`
   - Recalcular `amount_remaining`
   - Cambiar status automáticamente:
@@ -122,12 +122,12 @@ Agregar campos al modelo `Sales`:
     - Si `amount_remaining > 0` y `amount_paid > 0` → PARTIAL
   - Crear/actualizar registro en Earnings cuando se complete
 
-- [ ] **PATCH /api/v1/sales/{sale_id}/status** - Cambiar estado
+- [x] **PATCH /api/v1/sales/{sale_id}/status** - Cambiar estado
   - PENDING → PARTIAL → COMPLETED
   - Permitir CANCEL solo si no hay pagos o es PENDING
   - Restaurar stock si se cancela
 
-- [ ] **DELETE /api/v1/sales/{sale_id}** - Cancelar venta
+- [x] **DELETE /api/v1/sales/{sale_id}** - Cancelar venta
   - Solo si status es PENDING
   - Restaurar stock
   - Registrar motivo de cancelación
@@ -155,9 +155,9 @@ CANCELLED (Cancelada)
 
 ### Lógica de Negocio
 - [ ] Al crear venta COMPLETED/PARTIAL, reducir stock del producto
-- [ ] Al cancelar venta, restaurar stock
+- [x] Al cancelar venta, restaurar stock
 - [ ] Notificar cuando una venta PENDING está cerca de `due_date`
-- [ ] No permitir eliminar productos con ventas PENDING o PARTIAL
+- [x] No permitir eliminar productos con ventas PENDING o PARTIAL
 
 ---
 
