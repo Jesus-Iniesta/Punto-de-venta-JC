@@ -59,7 +59,7 @@
   - Validar cambios de precio
   - Registrar historial de cambios de precio (opcional)
 
-- [ ] **DELETE /api/v1/products/{product_id}** - Eliminar producto (soft delete)
+- [x] **DELETE /api/v1/products/{product_id}** - Eliminar producto (soft delete)
   - Cambiar `is_active` a False
   - No permitir eliminar si tiene ventas pendientes
 
@@ -70,7 +70,7 @@
 ### Validaciones
 - [x] Stock no puede ser negativo
 - [x] Precio debe ser mayor a costo
-- [ ] No permitir vender productos sin stock
+- [x] No permitir vender productos sin stock
 
 ---
 
@@ -79,28 +79,28 @@
 ### Actualización del Modelo
 Agregar campos al modelo `Sales`:
 ```python
-- status: Enum (PENDING, PARTIAL, COMPLETED, CANCELLED)
-- subtotal: Float (precio sin aplicar descuentos)
-- discount: Float (descuento aplicado)
-- total_price: Float (precio final a pagar)
-- amount_paid: Float (cantidad ya pagada)
-- amount_remaining: Float (cantidad restante por pagar)
-- payment_method: Enum (CASH, CARD, TRANSFER, MIXED)
-- notes: Text (notas de la venta)
-- due_date: DateTime (fecha límite de pago para pendientes)
+- status: Enum (PENDING, PARTIAL, COMPLETED, CANCELLED) #Listo
+- subtotal: Float (precio sin aplicar descuentos)#Listo
+- discount: Float (descuento aplicado)#Listo
+- total_price: Float (precio final a pagar) # Listo
+- amount_paid: Float (cantidad ya pagada) #Listo
+- amount_remaining: Float (cantidad restante por pagar) #Listo
+- payment_method: Enum (CASH, CARD, TRANSFER, MIXED) # Listo
+- notes: Text (notas de la venta) #Listo
+- due_date: DateTime (fecha límite de pago para pendientes)#Listo
 ```
 
 ### Endpoints Necesarios
 
-- [ ] **POST /api/v1/sales/** - Crear nueva venta
-  - Validar stock disponible
+- [x] **POST /api/v1/sales/** - Crear nueva venta
+  - Validar stock disponible 
   - Calcular total automáticamente
   - Permitir descuentos
   - Registrar pago inicial (puede ser 0 para PENDING)
   - Reducir stock si status es COMPLETED o PARTIAL
   - Crear registro en Earnings si está COMPLETED
 
-- [ ] **GET /api/v1/sales/** - Listar ventas
+- [x] **GET /api/v1/sales/** - Listar ventas
   - Filtros por: status, vendedor, rango de fechas
   - Paginación
   - Totales: ventas completadas, pendientes, parciales
