@@ -20,4 +20,4 @@ class Earnings(Base):
     created_at = Column(TIMESTAMP, nullable=False)
     
     sale = relationship("Sales", back_populates="earnings")
-    product = relationship("Products", back_populates="earnings")
+    product = relationship("Product", back_populates="earnings")

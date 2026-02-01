@@ -7,6 +7,7 @@ from app.db.database import get_db
 from app.models.sales import Sales as SalesModel
 from app.models.product import Product as ProductModel
 from app.models.sellers import Sellers as SellersModel
+from app.models.earnings import Earnings as EarningsModel
 from app.schemas.sales import (
     Sale, SaleCreate, SaleUpdate, SalePayment, 
     SaleStatusUpdate, SaleStatus, SaleWithDetails,
@@ -16,6 +17,48 @@ from app.core.dependencies import get_current_active_user, require_admin
 from app.models.user import User as UserModel
 
 router = APIRouter()
+
+
+def _create_earnings_record(sale: SalesModel, product: ProductModel, db: Session) -> None:
+    """
+    Crea un registro de earnings cuando una venta se completa.
+    
+    Calcula automáticamente:
+    - total_cost = cost_price * quantity
+    - total_revenue = sale_price * quantity  
+    - profit = total_revenue - total_cost
+    - profit_margin = (profit / total_revenue) * 100
+    """
+    # Verificar si ya existe un registro de earnings para esta venta
+    existing_earning = db.query(EarningsModel).filter(
+        EarningsModel.sale_id == sale.id
+    ).first()
+    
+    if existing_earning:
+        return  # Ya existe, no crear duplicado
+    
+    # Calcular valores
+    total_cost = product.cost_price * sale.quantity
+    total_revenue = product.price * sale.quantity
+    profit = total_revenue - total_cost
+    profit_margin = (profit / total_revenue * 100) if total_revenue > 0 else 0.0
+    
+    # Crear registro de earnings
+    earning = EarningsModel(
+        sale_id=sale.id,
+        product_id=product.id,
+        cost_price=product.cost_price,
+        sale_price=product.price,
+        quantity=sale.quantity,
+        total_cost=total_cost,
+        total_revenue=total_revenue,
+        profit=profit,
+        profit_margin=profit_margin,
+        is_recorded=True,
+        created_at=datetime.now(timezone.utc)
+    )
+    
+    db.add(earning)
 
 
 def _determine_sale_status(amount_paid: float, total_price: float) -> SaleStatus:
@@ -150,6 +193,11 @@ def create_sale(
         db.add(new_sale)
         db.commit()
         db.refresh(new_sale)
+        
+        # Crear registro de earnings si la venta está completada
+        if status_value == SaleStatus.COMPLETED:
+            _create_earnings_record(new_sale, product, db)
+            db.commit()
         
         return new_sale
         
@@ -474,7 +522,11 @@ def register_sale_payment(
         new_status = _determine_sale_status(sale.amount_paid, sale.total_price)
         sale.status = new_status.value
         
-        # TODO: Crear registro en Earnings cuando se complete (status == COMPLETED)
+        # Crear registro en Earnings cuando se complete
+        if new_status == SaleStatus.COMPLETED:
+            product = db.query(ProductModel).filter(ProductModel.id == sale.product_id).first()
+            if product:
+                _create_earnings_record(sale, product, db)
         
         # Actualizar método de pago si se proporciona
         if payment.payment_method:

@@ -181,12 +181,12 @@ Actualizar el modelo `Earnings`:
 
 ### Endpoints Necesarios
 
-- [ ] **POST /api/v1/earnings/investment** - Registrar inversión inicial
+- [x] **POST /api/v1/earnings/investment** - Registrar inversión inicial
   - Capital invertido en productos
   - Fecha de inversión
   - Descripción
 
-- [ ] **GET /api/v1/earnings/summary** - Resumen de ganancias
+- [x] **GET /api/v1/earnings/summary** - Resumen de ganancias
   - Total invertido (suma de cost_price de todos los productos)
   - Total vendido (suma de ventas completadas)
   - Ganancia bruta (total vendido - total invertido)
@@ -194,7 +194,7 @@ Actualizar el modelo `Earnings`:
   - Margen de ganancia promedio
   - Estado: PROFIT (ganancia) o LOSS (pérdida)
 
-- [ ] **GET /api/v1/earnings/by-product** - Ganancias por producto
+- [x] **GET /api/v1/earnings/by-product** - Ganancias por producto
   - Lista de productos con:
     - Cantidad vendida
     - Total invertido en ese producto
@@ -203,17 +203,17 @@ Actualizar el modelo `Earnings`:
     - Margen de ganancia %
   - Ordenar por: más rentables, más vendidos, menos rentables
 
-- [ ] **GET /api/v1/earnings/by-period** - Ganancias por período
+- [x] **GET /api/v1/earnings/by-period** - Ganancias por período
   - Filtros: día, semana, mes, año
   - Comparar con período anterior
   - Gráfica de tendencias (retornar datos para frontend)
 
-- [ ] **GET /api/v1/earnings/by-seller** - Ganancias por vendedor
+- [x] **GET /api/v1/earnings/by-seller** - Ganancias por vendedor
   - Total de ventas por vendedor
   - Comisiones (si aplica)
   - Ranking de vendedores
 
-- [ ] **GET /api/v1/earnings/{sale_id}** - Ganancia de venta específica
+- [x] **GET /api/v1/earnings/{sale_id}** - Ganancia de venta específica
   - Desglose completo de costo vs venta
 
 ### Cálculos Automáticos
