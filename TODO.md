@@ -154,7 +154,7 @@ CANCELLED (Cancelada)
 ```
 
 ### Lógica de Negocio
-- [ ] Al crear venta COMPLETED/PARTIAL, reducir stock del producto
+- [X] Al crear venta COMPLETED/PARTIAL, reducir stock del producto
 - [x] Al cancelar venta, restaurar stock
 - [ ] Notificar cuando una venta PENDING está cerca de `due_date`
 - [x] No permitir eliminar productos con ventas PENDING o PARTIAL
@@ -166,7 +166,7 @@ CANCELLED (Cancelada)
 ### Actualización del Modelo
 Actualizar el modelo `Earnings`:
 ```python
-- sale_id: FK a Sales
+- sale_id: FK a Sales 
 - product_id: FK a Products (para tracking por producto)
 - cost_price: Float (precio de costo del producto al momento de venta)
 - sale_price: Float (precio de venta)

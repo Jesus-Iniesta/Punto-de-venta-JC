@@ -20,3 +20,4 @@ class Product(Base):
     
     # Relaciones
     sales = relationship("Sales", back_populates="product")
+    earnings = relationship("Earnings", back_populates="product")
