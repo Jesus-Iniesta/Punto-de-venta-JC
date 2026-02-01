@@ -242,12 +242,12 @@ else:
 
 ### Endpoints Necesarios
 
-- [ ] **POST /api/v1/sellers/** - Crear vendedor
-- [ ] **GET /api/v1/sellers/** - Listar vendedores
-- [ ] **GET /api/v1/sellers/{seller_id}** - Obtener vendedor
-- [ ] **PUT /api/v1/sellers/{seller_id}** - Actualizar vendedor
-- [ ] **DELETE /api/v1/sellers/{seller_id}** - Eliminar vendedor (soft delete)
-- [ ] **GET /api/v1/sellers/{seller_id}/sales** - Ventas de un vendedor
+- [x] **POST /api/v1/sellers/** - Crear vendedor
+- [x] **GET /api/v1/sellers/** - Listar vendedores
+- [x] **GET /api/v1/sellers/{seller_id}** - Obtener vendedor
+- [x] **PUT /api/v1/sellers/{seller_id}** - Actualizar vendedor
+- [x] **DELETE /api/v1/sellers/{seller_id}** - Eliminar vendedor (soft delete)
+- [x] **GET /api/v1/sellers/{seller_id}/sales** - Ventas de un vendedor
 
 ---
 
