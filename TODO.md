@@ -255,27 +255,27 @@ else:
 
 ### Endpoints de Auth
 
-- [ ] **POST /api/v1/auth/login** - Iniciar sesión
+- [x] **POST /api/v1/auth/login** - Iniciar sesión
   - Validar credenciales
   - Retornar JWT token
   - Incluir datos del usuario en la respuesta
 
-- [ ] **POST /api/v1/auth/logout** - Cerrar sesión (opcional)
-  - Invalidar token (si se usa blacklist)
+- [x] **POST /api/v1/auth/logout** - Cerrar sesión
+  - Invalidar token (blacklist en memoria, usar Redis en producción)
 
-- [ ] **POST /api/v1/auth/refresh** - Renovar token
+- [x] **POST /api/v1/auth/refresh** - Renovar token
   - Generar nuevo token a partir de refresh token
 
-- [ ] **POST /api/v1/auth/forgot-password** - Recuperar contraseña
-  - Enviar email con token de recuperación
+- [x] **POST /api/v1/auth/forgot-password** - Recuperar contraseña
+  - Generar token de recuperación (en producción enviar por email)
 
-- [ ] **POST /api/v1/auth/reset-password** - Restablecer contraseña
+- [x] **POST /api/v1/auth/reset-password** - Restablecer contraseña
   - Validar token y cambiar password
 
 ### Middleware y Dependencies
-- [ ] Dependency `get_current_user` - Extraer usuario del JWT
-- [ ] Dependency `require_admin` - Verificar rol de admin
-- [ ] Dependency `require_active_user` - Verificar usuario activo
+- [x] Dependency `get_current_user` - Extraer usuario del JWT
+- [x] Dependency `require_admin` - Verificar rol de admin
+- [x] Dependency `require_active_user` - Verificar usuario activo
 
 ---
 

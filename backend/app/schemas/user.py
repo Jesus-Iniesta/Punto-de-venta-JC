@@ -61,3 +61,24 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username: Optional[str] = None
+
+
+class RefreshToken(BaseModel):
+    refresh_token: str
+
+
+class PasswordResetRequest(BaseModel):
+    email: EmailStr
+
+
+class PasswordReset(BaseModel):
+    token: str
+    new_password: str = Field(..., min_length=8)
+    
+    @field_validator('new_password')
+    def password_strength(cls, v):
+        if not any(c.isupper() for c in v):
+            raise ValueError('Debe tener al menos una mayúscula')
+        if not any(c.isdigit() for c in v):
+            raise ValueError('Debe tener al menos un número')
+        return v
