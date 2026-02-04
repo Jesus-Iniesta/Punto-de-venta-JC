@@ -1,0 +1,279 @@
+.create-product-page {
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  padding-top: 5rem;
+}
+
+.create-product-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+}
+
+.create-product-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.create-product-title {
+  font-size: 2.5rem;
+  font-weight: 300;
+  color: var(--color-text);
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.5px;
+}
+
+.create-product-subtitle {
+  font-size: 1.1rem;
+  color: var(--color-secondary);
+  margin: 0;
+  font-weight: 400;
+}
+
+.create-product-form {
+  background-color: var(--bg-white);
+  border-radius: 8px;
+  padding: 2.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.form-message {
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 2rem;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.form-error {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: var(--color-error);
+  border: 1px solid rgba(220, 53, 69, 0.2);
+}
+
+.form-success {
+  background-color: rgba(40, 167, 69, 0.1);
+  color: #28a745;
+  border: 1px solid rgba(40, 167, 69, 0.2);
+}
+
+.form-section {
+  margin-bottom: 2.5rem;
+}
+
+.form-section-title {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--color-text);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(132, 169, 140, 0.2);
+}
+
+.image-upload-container {
+  width: 100%;
+  height: 300px;
+  border: 2px dashed rgba(132, 169, 140, 0.3);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  background-color: rgba(132, 169, 140, 0.05);
+}
+
+.image-upload-container:hover {
+  border-color: var(--color-cta);
+  background-color: rgba(226, 149, 149, 0.05);
+}
+
+.image-placeholder {
+  text-align: center;
+  color: var(--color-secondary);
+}
+
+.upload-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 1rem;
+  stroke-width: 1.5;
+  opacity: 0.6;
+}
+
+.image-placeholder p {
+  font-size: 1.1rem;
+  margin: 0 0 0.5rem;
+  color: var(--color-text);
+}
+
+.upload-hint {
+  font-size: 0.9rem;
+  color: var(--color-secondary);
+  opacity: 0.8;
+}
+
+.image-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--color-text);
+  margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  font-size: 1rem;
+  border: 1px solid rgba(132, 169, 140, 0.3);
+  border-radius: 4px;
+  background-color: var(--bg-white);
+  color: var(--color-text);
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--color-cta);
+  box-shadow: 0 0 0 3px rgba(226, 149, 149, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.form-group-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.form-group-checkbox input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: var(--color-cta);
+}
+
+.form-group-checkbox label {
+  font-size: 0.95rem;
+  color: var(--color-text);
+  cursor: pointer;
+  margin: 0;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(132, 169, 140, 0.2);
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 0.875rem 2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.3px;
+  font-family: inherit;
+}
+
+.btn-primary {
+  background-color: var(--color-cta);
+  color: var(--bg-primary);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--color-cta-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(226, 149, 149, 0.3);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-text);
+  border: 1px solid rgba(132, 169, 140, 0.3);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: rgba(132, 169, 140, 0.05);
+  border-color: var(--color-secondary);
+}
+
+@media (max-width: 768px) {
+  .create-product-container {
+    padding: 2rem 1.5rem;
+  }
+
+  .create-product-form {
+    padding: 2rem 1.5rem;
+  }
+
+  .create-product-title {
+    font-size: 2rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .image-upload-container {
+    height: 250px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .create-product-title {
+    font-size: 1.75rem;
+  }
+
+  .create-product-form {
+    padding: 1.5rem 1rem;
+  }
+
+  .image-upload-container {
+    height: 200px;
+  }
+}

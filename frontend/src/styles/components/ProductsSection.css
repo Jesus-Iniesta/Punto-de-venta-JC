@@ -37,6 +37,25 @@
   gap: 4rem 3rem;
 }
 
+.products-loading,
+.products-error,
+.products-empty {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--color-secondary);
+  font-size: 1.1rem;
+}
+
+.products-error {
+  color: var(--color-error);
+}
+
+.products-empty p {
+  margin: 0;
+  color: var(--color-text);
+  opacity: 0.6;
+}
+
 @media (max-width: 968px) {
   .products-section {
     padding: 6rem 1.5rem;

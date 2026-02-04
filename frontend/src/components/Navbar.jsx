@@ -37,7 +37,7 @@ const Navbar = () => {
                   <button className="navbar-link">
                     Panel
                   </button>
-                  <button className="navbar-link">
+                  <button className="navbar-link" onClick={() => navigate('/admin/products/create')}>
                     Subir artículos
                   </button>
                   <button className="navbar-link">
