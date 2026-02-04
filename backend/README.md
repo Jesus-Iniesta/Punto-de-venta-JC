@@ -159,6 +159,8 @@ curl -X GET "http://localhost:8000/api/v1/users/me" \
 - `PUT /{product_id}` - Actualizar producto
 - `DELETE /{product_id}` - Eliminar producto
 - `PATCH /{product_id}/stock` - Ajustar stock
+- `POST /{product_id}/image` - Subir imagen (máxima calidad)
+- `DELETE /{product_id}/image` - Eliminar imagen
 
 ### Ventas (`/api/v1/sales`)
 - `POST /` - Crear venta
@@ -225,6 +227,14 @@ Actualmente usa una blacklist en memoria. Para producción, implementar con Redi
 
 ### Email para recuperación de contraseña
 El endpoint `/forgot-password` actualmente retorna el token en la respuesta (solo desarrollo). En producción, debe enviarse por email.
+
+### Imágenes de productos
+- Se guardan en **máxima calidad** sin compresión en `uploads/products/`
+- Formatos: jpg, jpeg, png, webp
+- Tamaño máximo: 10 MB
+- Se sirven automáticamente en `/uploads/products/filename.ext`
+- Solo admins pueden subir/eliminar imágenes
+- Ver más en [uploads/README.md](uploads/README.md)
 
 ## 🐛 Troubleshooting
 

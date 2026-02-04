@@ -1,0 +1,5 @@
+# Ignorar todas las imágenes subidas pero mantener la estructura
+*
+!.gitignore
+!products/
+!products/.gitkeep
