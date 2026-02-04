@@ -1,7 +1,7 @@
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
 import ProductsSection from '../components/ProductsSection';
-import './Home.css';
+import '../styles/pages/Home.css';
 
 const Home = () => {
   return (

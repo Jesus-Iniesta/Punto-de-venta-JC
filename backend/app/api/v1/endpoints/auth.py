@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Header
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from datetime import timedelta
+from datetime import timedelta, datetime
 from typing import Optional
 from app.core.config import settings
 from app.core.security import (
@@ -16,23 +16,26 @@ from app.core.security import (
 from app.db.database import get_db
 from app.models.user import User
 from app.schemas.user import (
-    Token, 
+    Token,
+    LoginResponse,
     RefreshToken, 
     PasswordResetRequest, 
-    PasswordReset
+    PasswordReset,
+    UserCreate,
+    User as UserSchema
 )
 
 router = APIRouter()
 
 
-@router.post("/login", response_model=Token)
+@router.post("/login", response_model=LoginResponse)
 def login(
     db: Session = Depends(get_db),
     form_data: OAuth2PasswordRequestForm = Depends()
 ):
     """
     Iniciar sesión con username y password.
-    Retorna access_token JWT.
+    Retorna access_token JWT y información del usuario.
     """
     user = db.query(User).filter(User.username == form_data.username).first()
     
@@ -54,7 +57,65 @@ def login(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
     
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user": user
+    }
+
+
+@router.post("/register", response_model=LoginResponse, status_code=status.HTTP_201_CREATED)
+def register(
+    user_data: UserCreate,
+    db: Session = Depends(get_db)
+):
+    """
+    Registrar un nuevo usuario.
+    Por defecto, el rol es 'user'.
+    """
+    # Verificar si el username ya existe
+    existing_user = db.query(User).filter(User.username == user_data.username).first()
+    if existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="El nombre de usuario ya está registrado"
+        )
+    
+    # Verificar si el email ya existe
+    existing_email = db.query(User).filter(User.email == user_data.email).first()
+    if existing_email:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="El email ya está registrado"
+        )
+    
+    # Crear nuevo usuario
+    hashed_password = get_password_hash(user_data.password)
+    new_user = User(
+        username=user_data.username,
+        email=user_data.email,
+        full_name=user_data.full_name,
+        hashed_password=hashed_password,
+        role="user",  # Por defecto es user
+        is_active=True,
+        created_at=datetime.now()
+    )
+    
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    
+    # Generar token para el nuevo usuario
+    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": new_user.username}, expires_delta=access_token_expires
+    )
+    
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user": new_user
+    }
 
 
 @router.post("/logout", status_code=status.HTTP_200_OK)

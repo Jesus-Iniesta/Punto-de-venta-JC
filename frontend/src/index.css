@@ -1,9 +1,12 @@
 :root {
   --bg-primary: #FCF9F2;
+  --bg-white: #ffffff;
   --color-cta: #E29595;
+  --color-cta-hover: #d47d7d;
   --color-secondary: #84A98C;
   --color-text: #353535;
   --color-premium: #D4AF37;
+  --color-error: #dc3545;
 
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;

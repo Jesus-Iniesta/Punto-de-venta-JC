@@ -1,6 +1,6 @@
 .home {
   min-height: 100vh;
-  background-color: #FCF9F2;
+  background-color: var(--bg-primary);
 }
 
 main {

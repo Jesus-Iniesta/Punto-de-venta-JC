@@ -62,7 +62,7 @@
 .hero-title {
   font-size: 4.5rem;
   font-weight: 300;
-  color: #FCF9F2;
+  color: var(--bg-primary);
   line-height: 1.1;
   letter-spacing: -1px;
   margin: 0;
@@ -71,7 +71,7 @@
 
 .hero-subtitle {
   font-size: 1.5rem;
-  color: #FCF9F2;
+  color: var(--bg-primary);
   font-weight: 400;
   margin: 0;
   letter-spacing: 1px;
@@ -79,8 +79,8 @@
 }
 
 .hero-cta {
-  background-color: #E29595;
-  color: #FCF9F2;
+  background-color: var(--color-cta);
+  color: var(--bg-primary);
   border: none;
   padding: 1.2rem 3rem;
   font-size: 1.1rem;
@@ -94,7 +94,7 @@
 }
 
 .hero-cta:hover {
-  background-color: #d47d7d;
+  background-color: var(--color-cta-hover);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(226, 149, 149, 0.4);
 }
