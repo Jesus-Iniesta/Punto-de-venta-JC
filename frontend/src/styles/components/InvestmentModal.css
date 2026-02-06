@@ -1,0 +1,200 @@
+.investment-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.investment-modal-container {
+  background: var(--bg-primary);
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease-out;
+}
+
+.investment-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.investment-modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--color-text);
+}
+
+.investment-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--color-text);
+  cursor: pointer;
+  padding: 0.5rem;
+  line-height: 1;
+  transition: transform 0.2s;
+}
+
+.investment-modal-close:hover {
+  transform: scale(1.2);
+  color: var(--color-error);
+}
+
+.investment-modal-close:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.investment-form {
+  padding: 1.5rem;
+  max-height: calc(90vh - 80px);
+  overflow-y: auto;
+}
+
+.investment-form-group {
+  margin-bottom: 1.5rem;
+}
+
+.investment-form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.investment-form-group .required {
+  color: var(--color-error);
+}
+
+.investment-form-group input,
+.investment-form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: var(--color-text);
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.investment-form-group input:focus,
+.investment-form-group textarea:focus {
+  outline: none;
+  border-color: var(--color-cta);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.investment-form-group input.error,
+.investment-form-group textarea.error {
+  border-color: var(--color-error);
+}
+
+.investment-form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+}
+
+.error-message {
+  display: block;
+  margin-top: 0.5rem;
+  color: var(--color-error);
+  font-size: 0.875rem;
+}
+
+.investment-form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.investment-form-actions button {
+  flex: 1;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-cancel {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-text);
+}
+
+.btn-cancel:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.btn-submit {
+  background: var(--color-cta);
+  color: white;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background: var(--color-secondary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.investment-form-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .investment-modal-container {
+    width: 95%;
+    max-height: 95vh;
+  }
+
+  .investment-modal-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .investment-form {
+    padding: 1rem;
+  }
+
+  .investment-form-actions {
+    flex-direction: column;
+  }
+}

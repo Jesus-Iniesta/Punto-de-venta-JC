@@ -10,12 +10,13 @@
 }
 
 .navbar-container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 1.5rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 3rem; /* Espacio entre brand y menu */
 }
 
 .navbar-brand {
@@ -25,6 +26,7 @@
   cursor: pointer;
   transition: color 0.3s ease;
   letter-spacing: 0.5px;
+  white-space: nowrap; /* Evita que el título se rompa */
 }
 
 .navbar-brand:hover {
@@ -33,8 +35,28 @@
 
 .navbar-menu {
   display: flex;
-  gap: 2rem;
+  gap: 1rem;
   align-items: center;
+  flex-wrap: wrap; /* Permite que se envuelva en pantallas pequeñas */
+}
+
+/* Secciones del navbar para agrupar lógicamente */
+.navbar-section {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 0 0.75rem;
+}
+
+.navbar-section.navbar-admin {
+  border-left: 2px solid rgba(132, 169, 140, 0.3);
+  border-right: 2px solid rgba(132, 169, 140, 0.3);
+  padding: 0 1rem;
+}
+
+.navbar-section.navbar-user {
+  border-left: 2px solid rgba(226, 149, 149, 0.3);
+  padding-left: 1rem;
 }
 
 .navbar-link {
@@ -43,38 +65,61 @@
   color: var(--color-text);
   font-size: 0.95rem;
   cursor: pointer;
-  transition: color 0.3s ease;
-  padding: 0;
+  transition: all 0.3s ease;
+  padding: 0.5rem 0.75rem;
   font-family: inherit;
   font-weight: 400;
+  border-radius: 6px;
+  white-space: nowrap;
 }
 
 .navbar-link:hover {
   color: var(--color-cta);
-}
-
-.navbar-contact {
-  color: var(--color-cta);
-  font-weight: 500;
+  background-color: rgba(226, 149, 149, 0.1);
 }
 
 .navbar-username {
   color: var(--color-text);
   font-weight: 500;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   padding: 0.5rem 0.75rem;
-  background-color: rgba(132, 169, 140, 0.1);
-  border-radius: 4px;
+  background-color: rgba(132, 169, 140, 0.15);
+  border-radius: 6px;
+  white-space: nowrap;
 }
 
 .navbar-logout {
-  color: var(--color-cta);
+  color: var(--color-error);
   font-weight: 500;
+}
+
+.navbar-logout:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+}
+
+@media (max-width: 1024px) {
+  .navbar-container {
+    gap: 2rem;
+  }
+
+  .navbar-menu {
+    gap: 0.75rem;
+  }
+
+  .navbar-section {
+    gap: 0.75rem;
+    padding: 0 0.5rem;
+  }
+
+  .navbar-section.navbar-admin {
+    padding: 0 0.75rem;
+  }
 }
 
 @media (max-width: 768px) {
   .navbar-container {
     padding: 1rem 1.5rem;
+    gap: 1.5rem;
   }
 
   .navbar-brand {
@@ -82,22 +127,57 @@
   }
 
   .navbar-menu {
-    gap: 1rem;
+    gap: 0.5rem;
   }
 
   .navbar-link {
     font-size: 0.85rem;
+    padding: 0.4rem 0.6rem;
   }
 
   .navbar-username {
     font-size: 0.85rem;
     padding: 0.4rem 0.6rem;
   }
+
+  .navbar-section {
+    gap: 0.5rem;
+    padding: 0 0.25rem;
+  }
+
+  .navbar-section.navbar-admin {
+    padding: 0 0.5rem;
+  }
 }
 
 @media (max-width: 480px) {
+  .navbar-container {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
   .navbar-menu {
-    gap: 0.75rem;
+    width: 100%;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .navbar-section {
+    gap: 0.5rem;
+    padding: 0;
+  }
+
+  .navbar-section.navbar-admin,
+  .navbar-section.navbar-user {
+    border: none;
+    padding: 0;
+  }
+
+  .navbar-link {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.5rem;
+  }
 
   .navbar-username {
     font-size: 0.8rem;
@@ -105,11 +185,5 @@
     max-width: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  }
-
-  .navbar-link {
-    font-size: 0.8rem;
   }
 }
