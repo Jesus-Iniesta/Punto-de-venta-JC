@@ -22,44 +22,54 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
+        {/* Brand - Lado izquierdo */}
         <div className="navbar-brand" onClick={() => navigate('/')}>
           Flores Artesanales
         </div>
+
+        {/* Menú - Lado derecho */}
         <div className="navbar-menu">
+          {/* Opciones públicas */}
           <button className="navbar-link" onClick={() => { scrollToTop(); navigate('/'); }}>
             Inicio
           </button>
           
           {isAuthenticated() ? (
             <>
+              {/* Sección de Operaciones - Para todos los usuarios autenticados */}
+              <div className="navbar-section">
+                <button className="navbar-link" onClick={() => navigate('/sales')}>
+                  Ventas
+                </button>
+              </div>
+
+              {/* Sección de Gestión - Solo Admin */}
               {isAdmin() && (
-                <>
-                  <button className="navbar-link">
-                    Panel
-                  </button>
+                <div className="navbar-section navbar-admin">
                   <button className="navbar-link" onClick={() => navigate('/admin/products/create')}>
-                    Subir artículos
+                    Productos
                   </button>
                   <button className="navbar-link" onClick={() => navigate('/sellers')}>
                     Vendedores
                   </button>
-                  <button className="navbar-link">
-                    Gestión
+                  <button className="navbar-link" onClick={() => navigate('/earnings')}>
+                    Ganancias
                   </button>
-                </>
+                </div>
               )}
-              <span className="navbar-username">{user?.full_name || user?.username}</span>
-              <button className="navbar-link navbar-logout" onClick={handleLogout}>
-                Cerrar sesión
-              </button>
+
+              {/* Sección de Usuario */}
+              <div className="navbar-section navbar-user">
+                <span className="navbar-username">{user?.full_name || user?.username}</span>
+                <button className="navbar-link navbar-logout" onClick={handleLogout}>
+                  Salir
+                </button>
+              </div>
             </>
           ) : (
             <>
               <button className="navbar-link" onClick={handleLogin}>
                 Iniciar sesión
-              </button>
-              <button className="navbar-link navbar-contact">
-                Contáctanos
               </button>
             </>
           )}
