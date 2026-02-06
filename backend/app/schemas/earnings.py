@@ -103,3 +103,13 @@ class InvestmentRecord(BaseModel):
     
     class Config:
         from_attributes = True
+
+
+class InvestmentResponse(InvestmentRecord):
+    """Respuesta de inversión registrada (incluye datos adicionales)"""
+    id: int
+    registered_by: str = Field(..., description="Usuario que registró la inversión")
+    created_at: datetime = Field(..., description="Fecha de creación del registro")
+    
+    class Config:
+        from_attributes = True

@@ -9,8 +9,9 @@ from app.models.earnings import Earnings as EarningsModel
 from app.models.product import Product as ProductModel
 from app.models.sales import Sales as SalesModel
 from app.models.sellers import Sellers as SellersModel
+from app.models.investment import Investment as InvestmentModel
 from app.schemas.earnings import (
-    InvestmentRecord, EarningsSummary, EarningsByProduct, 
+    InvestmentRecord, InvestmentResponse, EarningsSummary, EarningsByProduct, 
     EarningsByPeriod, EarningsBySeller, Earnings
 )
 from app.schemas.sales import SaleStatus
@@ -19,13 +20,10 @@ from app.models.user import User as UserModel
 
 router = APIRouter()
 
-# Almacenamiento temporal de inversiones (en producción debería ir a una tabla separada)
-investments_db = []
-
 
 @router.post(
     "/investment",
-    response_model=InvestmentRecord,
+    response_model=InvestmentResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Registrar inversión inicial",
     description="Registra una inversión inicial de capital en productos."
@@ -65,21 +63,22 @@ def register_investment(
         )
     
     try:
-        # Almacenar la inversión
-        # Nota: En producción, esto debería guardarse en una tabla de base de datos
-        investment_data = {
-            "amount": investment.amount,
-            "description": investment.description,
-            "date": investment.date,
-            "registered_by": current_user.username,
-            "registered_at": datetime.now(timezone.utc)
-        }
+        # Crear registro de inversión en la base de datos
+        db_investment = InvestmentModel(
+            amount=investment.amount,
+            description=investment.description,
+            date=investment.date,
+            registered_by=current_user.username
+        )
         
-        investments_db.append(investment_data)
+        db.add(db_investment)
+        db.commit()
+        db.refresh(db_investment)
         
-        return investment
+        return db_investment
         
     except Exception as e:
+        db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error al registrar la inversión: {str(e)}"
@@ -99,7 +98,7 @@ def get_earnings_summary(
     """
     Resumen general de ganancias:
     
-    - **total_invested**: Suma de cost_price de todos los productos en inventario
+    - **total_invested**: Suma de inversiones iniciales + cost_price de productos vendidos
     - **total_sold**: Suma de ventas completadas
     - **gross_profit**: Ganancia bruta (total vendido - total invertido)
     - **average_profit_margin**: Margen de ganancia promedio
@@ -108,11 +107,20 @@ def get_earnings_summary(
     
     Solo usuarios autenticados pueden acceder.
     """
-    # Calcular total invertido (suma de earnings.total_cost)
+    # Calcular total de inversiones iniciales
+    total_investments_result = db.query(
+        func.sum(InvestmentModel.amount)
+    ).scalar()
+    total_investments = float(total_investments_result) if total_investments_result else 0.0
+    
+    # Calcular total invertido en productos (suma de earnings.total_cost)
     total_cost_result = db.query(
         func.sum(EarningsModel.total_cost)
     ).scalar()
-    total_invested = float(total_cost_result) if total_cost_result else 0.0
+    total_cost = float(total_cost_result) if total_cost_result else 0.0
+    
+    # Total invertido = inversiones iniciales + costo de productos vendidos
+    total_invested = total_investments + total_cost
     
     # Calcular total vendido (suma de earnings.total_revenue)
     total_revenue_result = db.query(
@@ -405,3 +413,98 @@ def get_earning_by_sale(
         )
     
     return earning
+
+
+@router.put(
+    "/earning/{earning_id}",
+    response_model=Earnings,
+    summary="Actualizar registro de earning",
+    description="Permite corregir valores de un registro de earnings por errores."
+)
+def update_earning(
+    earning_id: int,
+    cost_price: Optional[float] = Query(None, gt=0, description="Nuevo precio de costo"),
+    sale_price: Optional[float] = Query(None, gt=0, description="Nuevo precio de venta"),
+    db: Session = Depends(get_db),
+    current_user: UserModel = Depends(get_current_active_user)
+):
+    """
+    Actualiza un registro de earnings para corregir errores:
+    
+    - **cost_price**: Nuevo precio de costo (recalcula totales)
+    - **sale_price**: Nuevo precio de venta (recalcula totales)
+    
+    Los campos calculados se actualizan automáticamente:
+    - total_cost, total_revenue, profit, profit_margin
+    
+    Solo administradores pueden realizar esta acción.
+    """
+    # Verificar permisos de admin
+    require_admin(current_user)
+    
+    # Buscar el earning
+    earning = db.query(EarningsModel).filter(EarningsModel.id == earning_id).first()
+    
+    if not earning:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"No se encontró registro de earning con ID {earning_id}"
+        )
+    
+    # Actualizar precios si se proporcionaron
+    if cost_price is not None:
+        earning.cost_price = cost_price
+        earning.total_cost = cost_price * earning.quantity
+    
+    if sale_price is not None:
+        earning.sale_price = sale_price
+        earning.total_revenue = sale_price * earning.quantity
+    
+    # Recalcular profit y profit_margin
+    earning.profit = earning.total_revenue - earning.total_cost
+    earning.profit_margin = (earning.profit / earning.total_revenue * 100) if earning.total_revenue > 0 else 0.0
+    
+    try:
+        db.commit()
+        db.refresh(earning)
+        return earning
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error al actualizar earning: {str(e)}"
+        )
+
+
+@router.get(
+    "/investments",
+    response_model=List[InvestmentResponse],
+    summary="Listar todas las inversiones",
+    description="Obtiene un listado de todas las inversiones iniciales registradas."
+)
+def get_investments(
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+    current_user: UserModel = Depends(get_current_active_user)
+):
+    """
+    Lista todas las inversiones iniciales:
+    
+    - **amount**: Monto invertido
+    - **description**: Descripción de la inversión
+    - **date**: Fecha de la inversión
+    - **registered_by**: Usuario que la registró
+    - **created_at**: Fecha de registro
+    
+    Solo usuarios autenticados pueden acceder.
+    """
+    try:
+        investments = db.query(InvestmentModel).order_by(
+            InvestmentModel.date.desc()
+        ).offset(skip).limit(limit).all()
+        
+        return investments
+    except Exception as e:
+        # Si la tabla no existe o hay error, retornar lista vacía
+        return []
