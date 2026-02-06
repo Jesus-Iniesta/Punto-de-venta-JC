@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import CreateProduct from './pages/CreateProduct';
+import SellersPage from './pages/SellersPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 
@@ -20,6 +21,14 @@ function App() {
             element={
               <ProtectedRoute adminOnly={true}>
                 <CreateProduct />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/sellers" 
+            element={
+              <ProtectedRoute>
+                <SellersPage />
               </ProtectedRoute>
             } 
           />

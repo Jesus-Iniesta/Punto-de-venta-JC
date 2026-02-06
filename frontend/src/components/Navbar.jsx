@@ -26,7 +26,7 @@ const Navbar = () => {
           Flores Artesanales
         </div>
         <div className="navbar-menu">
-          <button className="navbar-link" onClick={scrollToTop}>
+          <button className="navbar-link" onClick={() => { scrollToTop(); navigate('/'); }}>
             Inicio
           </button>
           
@@ -39,6 +39,9 @@ const Navbar = () => {
                   </button>
                   <button className="navbar-link" onClick={() => navigate('/admin/products/create')}>
                     Subir artículos
+                  </button>
+                  <button className="navbar-link" onClick={() => navigate('/sellers')}>
+                    Vendedores
                   </button>
                   <button className="navbar-link">
                     Gestión
