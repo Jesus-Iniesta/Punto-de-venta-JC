@@ -31,6 +31,7 @@ from app.models.product import Product
 from app.models.sellers import Sellers
 from app.models.sales import Sales
 from app.models.earnings import Earnings
+from app.models.investment import Investment
 
 # Set the sqlalchemy.url from our settings
 settings = Settings()
