@@ -74,26 +74,6 @@ class SaleStatusUpdate(BaseModel):
     reason: Optional[str] = Field(None, description="Razón del cambio de estado")
 
 
-class SaleInDB(SaleBase):
-    """Schema que representa una venta en la base de datos
-    Incluye campos generados automáticamente"""
-    id: int
-    status: SaleStatus
-    subtotal: float
-    total_price: float
-    amount_paid: float
-    amount_remaining: float
-    created_at: datetime
-    
-    class Config:
-        from_attributes = True  # Permite crear desde ORM models
-
-
-class Sale(SaleInDB):
-    """Schema de respuesta (GET request) con información completa"""
-    pass
-
-
 class ProductInfo(BaseModel):
     """Información del producto en la venta"""
     id: int
@@ -112,6 +92,30 @@ class SellerInfo(BaseModel):
     id: int
     name: str
     contact_info: Optional[str]
+    
+    class Config:
+        from_attributes = True
+
+
+class SaleInDB(SaleBase):
+    """Schema que representa una venta en la base de datos
+    Incluye campos generados automáticamente"""
+    id: int
+    status: SaleStatus
+    subtotal: float
+    total_price: float
+    amount_paid: float
+    amount_remaining: float
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True  # Permite crear desde ORM models
+
+
+class Sale(SaleInDB):
+    """Schema de respuesta (GET request) con información completa"""
+    product: Optional[ProductInfo] = None
+    seller: Optional[SellerInfo] = None
     
     class Config:
         from_attributes = True
