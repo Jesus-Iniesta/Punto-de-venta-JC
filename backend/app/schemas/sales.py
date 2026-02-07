@@ -125,6 +125,11 @@ class SaleWithDetails(Sale):
     """Schema de respuesta con detalles completos del producto, vendedor y cálculos de ganancia"""
     product: ProductInfo = Field(..., description="Información detallada del producto")
     seller: SellerInfo = Field(..., description="Información del vendedor")
+    product_name: str = Field(..., description="Nombre del producto")
+    seller_name: str = Field(..., description="Nombre del vendedor")
+    seller_email: Optional[str] = Field(None, description="Email del vendedor")
+    seller_phone: Optional[str] = Field(None, description="Teléfono del vendedor")
+    unit_price: float = Field(..., description="Precio unitario del producto")
     profit: float = Field(..., description="Ganancia de la venta (precio de venta - costo)")
     profit_margin_percentage: float = Field(..., description="Porcentaje de ganancia")
     

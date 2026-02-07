@@ -63,11 +63,11 @@ const SaleDetailsModal = ({ sale, onClose }) => {
             <div className="details-grid">
               <div className="detail-item">
                 <span className="detail-label">Nombre:</span>
-                <span className="detail-value">{sale.product_name}</span>
+                <span className="detail-value">{sale.product_name || 'Sin nombre'}</span>
               </div>
               <div className="detail-item">
                 <span className="detail-label">Cantidad:</span>
-                <span className="detail-value">{sale.quantity} unidad(es)</span>
+                <span className="detail-value">{sale.quantity || 0} unidad(es)</span>
               </div>
               <div className="detail-item">
                 <span className="detail-label">Precio Unitario:</span>
@@ -119,7 +119,7 @@ const SaleDetailsModal = ({ sale, onClose }) => {
             <div className="details-grid">
               <div className="detail-item">
                 <span className="detail-label">Nombre:</span>
-                <span className="detail-value">{sale.seller_name}</span>
+                <span className="detail-value">{sale.seller_name || 'Sin nombre'}</span>
               </div>
               {sale.seller_email && (
                 <div className="detail-item">

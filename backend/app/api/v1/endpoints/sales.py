@@ -342,9 +342,9 @@ def read_sale(
         "product": product_info,
         "seller": seller_info,
         "product_name": sale.product.name,
-        "seller_name": seller_info.name,
-        "seller_email": seller_info.email if hasattr(seller_info, 'email') else None,
-        "seller_phone": seller_info.contact_info,
+        "seller_name": sale.seller.name,
+        "seller_email": None,
+        "seller_phone": sale.seller.contact_info,
         "unit_price": sale.product.price,
         "profit": total_profit,
         "profit_margin_percentage": profit_margin_percentage
