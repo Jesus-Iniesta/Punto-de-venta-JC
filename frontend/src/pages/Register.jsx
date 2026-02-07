@@ -26,18 +26,55 @@ const Register = () => {
     });
   };
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePassword = (password) => {
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    return { hasUpperCase, hasNumber };
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
     // Validaciones
-    if (formData.password !== formData.confirmPassword) {
-      setError('Las contraseñas no coinciden');
+    if (!formData.username || formData.username.length < 3) {
+      setError('El nombre de usuario debe tener al menos 3 caracteres');
+      return;
+    }
+
+    if (!validateEmail(formData.email)) {
+      setError('El email no es válido');
+      return;
+    }
+
+    if (!formData.full_name || formData.full_name.trim().length === 0) {
+      setError('El nombre completo es requerido');
       return;
     }
 
     if (formData.password.length < 8) {
       setError('La contraseña debe tener al menos 8 caracteres');
+      return;
+    }
+
+    const passwordValidation = validatePassword(formData.password);
+    if (!passwordValidation.hasUpperCase) {
+      setError('La contraseña debe tener al menos una mayúscula');
+      return;
+    }
+
+    if (!passwordValidation.hasNumber) {
+      setError('La contraseña debe tener al menos un número');
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Las contraseñas no coinciden');
       return;
     }
 
@@ -49,7 +86,28 @@ const Register = () => {
       login(response.access_token, response.user);
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.detail || 'Error al registrar usuario');
+      // Manejar errores de validación de Pydantic (422)
+      if (err.response?.status === 422 && err.response?.data?.detail) {
+        const detail = err.response.data.detail;
+        
+        // Si detail es un array (errores de Pydantic)
+        if (Array.isArray(detail)) {
+          const errorMessages = detail.map(error => error.msg).join('. ');
+          setError(errorMessages);
+        } else if (typeof detail === 'string') {
+          setError(detail);
+        } else {
+          setError('Error de validación en los datos ingresados');
+        }
+      } else if (err.response?.data?.detail) {
+        // Otros errores con detail string
+        setError(typeof err.response.data.detail === 'string' 
+          ? err.response.data.detail 
+          : 'Error al registrar usuario');
+      } else {
+        setError('Error al registrar usuario. Intenta nuevamente.');
+      }
+      console.error('Error de registro:', err.response?.data);
     } finally {
       setLoading(false);
     }
