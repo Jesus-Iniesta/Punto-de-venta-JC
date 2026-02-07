@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { productService, BASE_URL } from '../services/productService';
 import RelatedProductsCarousel from '../components/RelatedProductsCarousel';
+import ContactButton from '../components/ContactButton';
 import '../styles/pages/ProductPage.css';
 
 const ProductPage = () => {
@@ -293,6 +294,12 @@ const ProductPage = () => {
                   <h3>Descripción</h3>
                   <p>{product.description || 'Sin descripción disponible'}</p>
                 </div>
+
+                {/* Botón de contacto por WhatsApp */}
+                <ContactButton 
+                  phone="5217226786551"
+                  label="Contáctanos para cotizar tu pedido"
+                />
 
                 {isAdmin() && (
                   <div className="admin-actions">

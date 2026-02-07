@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { sellersService } from '../services/sellersService';
+import ContactButton from '../components/ContactButton';
 import '../styles/pages/ContactPage.css';
 
 const ContactPage = () => {
@@ -30,13 +31,6 @@ const ContactPage = () => {
       console.error('Error loading sellers:', err);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleContact = (sellerId) => {
-    const phone = phoneNumbers[sellerId];
-    if (phone) {
-      window.open(`https://wa.me/${phone}`, '_blank');
     }
   };
 
@@ -81,12 +75,10 @@ const ContactPage = () => {
                 <h2 className="seller-name">{seller.name}</h2>
                 <p className="seller-info">{seller.contact_info || 'Vendedor disponible'}</p>
                 {phoneNumbers[seller.id] && (
-                  <button 
-                    onClick={() => handleContact(seller.id)}
-                    className="contact-button"
-                  >
-                    Contactar
-                  </button>
+                  <ContactButton 
+                    phone={phoneNumbers[seller.id]}
+                    label="Contactar"
+                  />
                 )}
               </div>
             ))}

@@ -74,24 +74,8 @@
   font-size: 1rem;
   color: #666;
   line-height: 1.6;
-  margin: 0 0 2rem;
+  margin: 0 0 1rem;
   max-width: 280px;
-}
-
-.contact-button {
-  background: var(--color-secondary);
-  color: white;
-  padding: 0.875rem 2.5rem;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.contact-button:hover {
-  background: #6d8b70;
 }
 
 /* Responsive */
