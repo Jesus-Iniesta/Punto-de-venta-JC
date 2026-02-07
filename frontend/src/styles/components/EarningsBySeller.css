@@ -1,0 +1,221 @@
+.earnings-seller-container {
+  width: 100%;
+}
+
+.seller-header {
+  margin-bottom: 1.5rem;
+}
+
+.seller-header h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+  color: var(--color-text);
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: #666;
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.summary-card {
+  background: var(--bg-white);
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.card-label {
+  font-size: 0.875rem;
+  color: #666;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card-value {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--color-text);
+  font-family: 'Courier New', monospace;
+}
+
+.card-value.success {
+  color: var(--color-secondary);
+}
+
+.card-value.profit {
+  color: var(--color-secondary);
+}
+
+.card-value.loss {
+  color: var(--color-error);
+}
+
+.card-value.error {
+  color: var(--color-error);
+}
+
+.table-container {
+  background: var(--bg-white);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+}
+
+.seller-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.seller-table thead {
+  background: var(--bg-primary);
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.seller-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--color-text);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.seller-table tbody tr {
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s;
+}
+
+.seller-table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+.seller-table td {
+  padding: 1rem;
+  color: var(--color-text);
+  font-size: 0.9375rem;
+}
+
+.position {
+  text-align: center;
+}
+
+.rank-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: white;
+  background: #999;
+}
+
+.rank-badge.rank-1 {
+  background: linear-gradient(135deg, #D4AF37 0%, #F4E5A1 100%);
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+}
+
+.rank-badge.rank-2 {
+  background: linear-gradient(135deg, #C0C0C0 0%, #E8E8E8 100%);
+  box-shadow: 0 2px 8px rgba(192, 192, 192, 0.3);
+}
+
+.rank-badge.rank-3 {
+  background: linear-gradient(135deg, #CD7F32 0%, #E5A572 100%);
+  box-shadow: 0 2px 8px rgba(205, 127, 50, 0.3);
+}
+
+.seller-name {
+  font-weight: 600;
+}
+
+.sales-count {
+  font-weight: 500;
+}
+
+.amount {
+  font-family: 'Courier New', monospace;
+  font-weight: 500;
+}
+
+.amount.success {
+  color: var(--color-secondary);
+}
+
+.amount.profit {
+  color: var(--color-secondary);
+  font-weight: 600;
+}
+
+.amount.loss {
+  color: var(--color-error);
+  font-weight: 600;
+}
+
+.success {
+  color: var(--color-secondary);
+  font-weight: 500;
+}
+
+.error {
+  color: var(--color-error);
+  font-weight: 500;
+}
+
+.loading-state,
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #999;
+}
+
+.alert {
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+.alert-error {
+  background: rgba(220, 53, 69, 0.1);
+  border: 1px solid var(--color-error);
+  color: var(--color-error);
+}
+
+@media (max-width: 768px) {
+  .summary-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .card-value {
+    font-size: 1.5rem;
+  }
+
+  .seller-table {
+    font-size: 0.875rem;
+  }
+
+  .seller-table th,
+  .seller-table td {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .rank-badge {
+    width: 28px;
+    height: 28px;
+    font-size: 0.75rem;
+  }
+}
