@@ -3,6 +3,7 @@ import { AuthProvider } from './context/AuthContext';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import ProductPage from './pages/ProductPage';
 import CreateProduct from './pages/CreateProduct';
 import SellersPage from './pages/SellersPage';
 import SalesPage from './pages/SalesPage';
@@ -18,6 +19,14 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route 
+            path="/product/:id" 
+            element={
+              <ProtectedRoute>
+                <ProductPage />
+              </ProtectedRoute>
+            } 
+          />
           <Route 
             path="/admin/products/create" 
             element={

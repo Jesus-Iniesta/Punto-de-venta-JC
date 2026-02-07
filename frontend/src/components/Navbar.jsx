@@ -36,12 +36,14 @@ const Navbar = () => {
           
           {isAuthenticated() ? (
             <>
-              {/* Sección de Operaciones - Para todos los usuarios autenticados */}
-              <div className="navbar-section">
-                <button className="navbar-link" onClick={() => navigate('/sales')}>
-                  Ventas
-                </button>
-              </div>
+              {/* Sección de Operaciones - Solo Admin */}
+              {isAdmin() && (
+                <div className="navbar-section">
+                  <button className="navbar-link" onClick={() => navigate('/sales')}>
+                    Ventas
+                  </button>
+                </div>
+              )}
 
               {/* Sección de Gestión - Solo Admin */}
               {isAdmin() && (

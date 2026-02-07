@@ -1,12 +1,18 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { productService } from '../services/productService';
 import '../styles/components/ProductsSection.css';
 import ProductCard from './ProductCard';
+import AuthRequiredModal from './AuthRequiredModal';
 
 const ProductsSection = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   useEffect(() => {
     loadProducts();
@@ -24,6 +30,14 @@ const ProductsSection = () => {
       console.error('Error loading products:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleProductClick = (product) => {
+    if (isAuthenticated()) {
+      navigate(`/product/${product.id}`);
+    } else {
+      setShowAuthModal(true);
     }
   };
 
@@ -64,11 +78,19 @@ const ProductsSection = () => {
         ) : (
           <div className="products-grid">
             {products.map(product => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard 
+                key={product.id} 
+                product={product} 
+                onClick={handleProductClick}
+              />
             ))}
           </div>
         )}
       </div>
+
+      {showAuthModal && (
+        <AuthRequiredModal onClose={() => setShowAuthModal(false)} />
+      )}
     </section>
   );
 };
