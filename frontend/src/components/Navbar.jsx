@@ -34,6 +34,13 @@ const Navbar = () => {
             Inicio
           </button>
           
+          {/* Contáctanos - Solo para guests y users (NO admin) */}
+          {!isAdmin() && (
+            <button className="navbar-link" onClick={() => navigate('/contact')}>
+              Contáctanos
+            </button>
+          )}
+          
           {isAuthenticated() ? (
             <>
               {/* Sección de Operaciones - Solo Admin */}

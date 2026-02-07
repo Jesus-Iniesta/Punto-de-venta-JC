@@ -61,8 +61,7 @@ def create_seller(
 
 @router.get(
     "/",
-    response_model=List[Seller],
-    dependencies=[Depends(get_current_active_user)]
+    response_model=List[Seller]
 )
 def list_sellers(
     skip: int = 0,
@@ -70,8 +69,7 @@ def list_sellers(
     db: Session = Depends(get_db)
 ):
     """
-    Listar todos los vendedores con paginación.
-    Requiere autenticación.
+    Listar todos los vendedores con paginación (PÚBLICO - no requiere autenticación).
     """
     sellers = db.query(SellersModel).offset(skip).limit(limit).all()
     return sellers

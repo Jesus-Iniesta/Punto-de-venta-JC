@@ -1,0 +1,142 @@
+.contact-page {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  padding: 4rem 2rem;
+}
+
+.contact-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.contact-loading,
+.contact-error,
+.contact-empty {
+  text-align: center;
+  font-size: 1.2rem;
+  color: var(--color-text);
+  padding: 4rem 0;
+}
+
+.contact-error {
+  color: #d32f2f;
+}
+
+.contact-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.contact-title {
+  font-size: 2.5rem;
+  color: var(--color-text);
+  margin: 0 0 1rem;
+  font-weight: 600;
+}
+
+.contact-subtitle {
+  font-size: 1.1rem;
+  color: #666;
+  margin: 0;
+}
+
+.sellers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 3rem;
+  padding: 2rem 0;
+}
+
+.seller-card {
+  background: white;
+  border-radius: 12px;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.3s ease;
+  border: 1px solid #f0f0f0;
+}
+
+.seller-card:hover {
+  transform: translateY(-4px);
+}
+
+.seller-name {
+  font-size: 1.5rem;
+  color: var(--color-text);
+  margin: 0 0 1rem;
+  font-weight: 600;
+}
+
+.seller-info {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.6;
+  margin: 0 0 2rem;
+  max-width: 280px;
+}
+
+.contact-button {
+  background: var(--color-secondary);
+  color: white;
+  padding: 0.875rem 2.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.contact-button:hover {
+  background: #6d8b70;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .contact-page {
+    padding: 3rem 1.5rem;
+  }
+
+  .contact-header {
+    margin-bottom: 3rem;
+  }
+
+  .contact-title {
+    font-size: 2rem;
+  }
+
+  .contact-subtitle {
+    font-size: 1rem;
+  }
+
+  .sellers-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .seller-card {
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-page {
+    padding: 2rem 1rem;
+  }
+
+  .contact-title {
+    font-size: 1.75rem;
+  }
+
+  .seller-name {
+    font-size: 1.25rem;
+  }
+
+  .contact-button {
+    width: 100%;
+    padding: 1rem;
+  }
+}
