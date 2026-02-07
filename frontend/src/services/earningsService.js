@@ -29,17 +29,29 @@ export const earningsService = {
 
   // Obtener ganancias por producto
   getByProduct: async (orderBy = 'profit') => {
-    const response = await api.get(`/earnings/by-product?order_by=${orderBy}`);
+    const response = await api.get('/earnings/by-product', {
+      params: { order_by: orderBy }
+    });
     return response.data;
   },
 
   // Obtener ganancias por período
   getByPeriod: async (period = 'month', startDate = null, endDate = null) => {
-    let url = `/earnings/by-period?period=${period}`;
-    if (startDate) url += `&start_date=${startDate}`;
-    if (endDate) url += `&end_date=${endDate}`;
+    const params = { period };
     
-    const response = await api.get(url);
+    // Convertir fechas a formato ISO con timezone si se proporcionan
+    if (startDate) {
+      const date = new Date(startDate);
+      date.setHours(0, 0, 0, 0);
+      params.start_date = date.toISOString();
+    }
+    if (endDate) {
+      const date = new Date(endDate);
+      date.setHours(23, 59, 59, 999);
+      params.end_date = date.toISOString();
+    }
+    
+    const response = await api.get('/earnings/by-period', { params });
     return response.data;
   },
 
@@ -69,11 +81,11 @@ export const earningsService = {
 
   // Actualizar earning (solo admin)
   updateEarning: async (earningId, costPrice = null, salePrice = null) => {
-    let url = `/earnings/earning/${earningId}?`;
-    if (costPrice !== null) url += `cost_price=${costPrice}&`;
-    if (salePrice !== null) url += `sale_price=${salePrice}`;
+    const params = {};
+    if (costPrice !== null) params.cost_price = costPrice;
+    if (salePrice !== null) params.sale_price = salePrice;
     
-    const response = await api.put(url);
+    const response = await api.put(`/earnings/earning/${earningId}`, null, { params });
     return response.data;
   }
 };

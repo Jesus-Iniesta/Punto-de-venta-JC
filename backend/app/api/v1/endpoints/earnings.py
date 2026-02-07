@@ -83,6 +83,40 @@ def register_investment(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error al registrar la inversión: {str(e)}"
         )
+        
+
+@router.get(
+    "/investments",
+    response_model=List[InvestmentResponse],
+    summary="Listar todas las inversiones",
+    description="Obtiene un listado de todas las inversiones iniciales registradas."
+)
+def get_investments(
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+    current_user: UserModel = Depends(get_current_active_user)
+):
+    """
+    Lista todas las inversiones iniciales:
+    
+    - **amount**: Monto invertido
+    - **description**: Descripción de la inversión
+    - **date**: Fecha de la inversión
+    - **registered_by**: Usuario que la registró
+    - **created_at**: Fecha de registro
+    
+    Solo administradores pueden acceder.
+    """
+    # Validar que el usuario tenga permisos de admin para ver inversiones
+    require_admin(current_user)
+    
+    try:
+        investments = db.query(InvestmentModel).order_by(InvestmentModel.date.desc()).offset(skip).limit(limit).all()
+        return investments
+    except Exception as e:
+        # Si la tabla no existe o hay error, retornar lista vacía
+        return []
 
 
 @router.get(
@@ -474,37 +508,3 @@ def update_earning(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error al actualizar earning: {str(e)}"
         )
-
-
-@router.get(
-    "/investments",
-    response_model=List[InvestmentResponse],
-    summary="Listar todas las inversiones",
-    description="Obtiene un listado de todas las inversiones iniciales registradas."
-)
-def get_investments(
-    skip: int = 0,
-    limit: int = 100,
-    db: Session = Depends(get_db),
-    current_user: UserModel = Depends(get_current_active_user)
-):
-    """
-    Lista todas las inversiones iniciales:
-    
-    - **amount**: Monto invertido
-    - **description**: Descripción de la inversión
-    - **date**: Fecha de la inversión
-    - **registered_by**: Usuario que la registró
-    - **created_at**: Fecha de registro
-    
-    Solo usuarios autenticados pueden acceder.
-    """
-    try:
-        investments = db.query(InvestmentModel).order_by(
-            InvestmentModel.date.desc()
-        ).offset(skip).limit(limit).all()
-        
-        return investments
-    except Exception as e:
-        # Si la tabla no existe o hay error, retornar lista vacía
-        return []
