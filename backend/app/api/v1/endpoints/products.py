@@ -204,10 +204,9 @@ def create_product(
 
 
 @router.get("/", response_model=List[Product])
-def read_products(skip: int = 0, limit: int = 100, db: Session = Depends(get_db),
-                  current_user: UserModel = Depends(get_current_active_user)):
+def read_products(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """
-    Obtiene una lista de productos con paginación.
+    Obtiene una lista de productos con paginación (PÚBLICO - no requiere autenticación).
     - **skip**: Número de productos a omitir (default: 0)
     - **limit**: Número máximo de productos a retornar (default: 100)
     """
@@ -216,8 +215,7 @@ def read_products(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
 
 
 @router.get("/{product_id}", response_model=Product)
-def read_product(product_id: int, db: Session = Depends(get_db),
-                 current_user: UserModel = Depends(get_current_active_user)):
+def read_product(product_id: int, db: Session = Depends(get_db)):
     """
     Obtiene un producto por su ID.
     - **product_id**: ID del producto a obtener
