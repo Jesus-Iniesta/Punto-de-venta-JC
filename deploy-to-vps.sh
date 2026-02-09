@@ -207,7 +207,7 @@ echo ""
 
 sleep 20  # Esperar que el backend esté listo
 
-docker exec punto_venta_backend_prod alembic upgrade head
+docker exec flores_eternas_backend_prod alembic upgrade head
 
 echo -e "${GREEN}✅ Migraciones ejecutadas${NC}"
 echo ""
@@ -221,7 +221,7 @@ echo ""
 sleep 10
 
 echo "Estado de contenedores:"
-docker ps --filter "name=punto_venta" --format "table {{.Names}}\t{{.Status}}"
+docker ps --filter "name=flores_eternas" --format "table {{.Names}}\t{{.Status}}"
 echo ""
 
 # Verificar endpoints
