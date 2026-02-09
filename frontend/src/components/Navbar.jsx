@@ -61,6 +61,9 @@ const Navbar = () => {
                   <button className="navbar-link" onClick={() => navigate('/sellers')}>
                     Vendedores
                   </button>
+                  <button className="navbar-link" onClick={() => navigate('/admin/users')}>
+                    Usuarios
+                  </button>
                   <button className="navbar-link" onClick={() => navigate('/earnings')}>
                     Ganancias
                   </button>

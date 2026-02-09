@@ -9,6 +9,7 @@ import CreateProduct from './pages/CreateProduct';
 import SellersPage from './pages/SellersPage';
 import SalesPage from './pages/SalesPage';
 import EarningsPage from './pages/EarningsPage';
+import UsersPage from './pages/UsersPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 
@@ -58,6 +59,14 @@ function App() {
             element={
               <ProtectedRoute adminOnly={true}>
                 <EarningsPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/users" 
+            element={
+              <ProtectedRoute adminOnly={true}>
+                <UsersPage />
               </ProtectedRoute>
             } 
           />

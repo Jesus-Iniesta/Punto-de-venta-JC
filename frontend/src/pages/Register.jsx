@@ -13,17 +13,27 @@ const Register = () => {
     password: '',
     confirmPassword: ''
   });
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState({
+    general: '',
+    username: '',
+    email: '',
+    full_name: '',
+    password: '',
+    confirmPassword: ''
+  });
   const [loading, setLoading] = useState(false);
   
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  const clearError = (field) => {
+    setErrors(prev => ({ ...prev, [field]: '', general: '' }));
+  };
+
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    clearError(name);
   };
 
   const validateEmail = (email) => {
@@ -39,42 +49,55 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setErrors({
+      general: '',
+      username: '',
+      email: '',
+      full_name: '',
+      password: '',
+      confirmPassword: ''
+    });
 
-    // Validaciones
+    // Validaciones locales
+    let hasError = false;
+    const newErrors = {};
+
     if (!formData.username || formData.username.length < 3) {
-      setError('El nombre de usuario debe tener al menos 3 caracteres');
-      return;
+      newErrors.username = 'El nombre de usuario debe tener al menos 3 caracteres';
+      hasError = true;
     }
 
     if (!validateEmail(formData.email)) {
-      setError('El email no es válido');
-      return;
+      newErrors.email = 'El email no es válido';
+      hasError = true;
     }
 
     if (!formData.full_name || formData.full_name.trim().length === 0) {
-      setError('El nombre completo es requerido');
-      return;
+      newErrors.full_name = 'El nombre completo es requerido';
+      hasError = true;
     }
 
     if (formData.password.length < 8) {
-      setError('La contraseña debe tener al menos 8 caracteres');
-      return;
-    }
-
-    const passwordValidation = validatePassword(formData.password);
-    if (!passwordValidation.hasUpperCase) {
-      setError('La contraseña debe tener al menos una mayúscula');
-      return;
-    }
-
-    if (!passwordValidation.hasNumber) {
-      setError('La contraseña debe tener al menos un número');
-      return;
+      newErrors.password = 'La contraseña debe tener al menos 8 caracteres';
+      hasError = true;
+    } else {
+      const passwordValidation = validatePassword(formData.password);
+      if (!passwordValidation.hasUpperCase) {
+        newErrors.password = 'La contraseña debe tener al menos una mayúscula';
+        hasError = true;
+      } else if (!passwordValidation.hasNumber) {
+        newErrors.password = 'La contraseña debe tener al menos un número';
+        hasError = true;
+      }
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setError('Las contraseñas no coinciden');
+      newErrors.confirmPassword = 'Las contraseñas no coinciden';
+      hasError = true;
+    }
+
+    if (hasError) {
+      setErrors(prev => ({ ...prev, ...newErrors }));
       return;
     }
 
@@ -86,28 +109,37 @@ const Register = () => {
       login(response.access_token, response.user);
       navigate('/');
     } catch (err) {
-      // Manejar errores de validación de Pydantic (422)
-      if (err.response?.status === 422 && err.response?.data?.detail) {
+      // Manejar errores del backend
+      if (err.response?.status === 400) {
         const detail = err.response.data.detail;
         
-        // Si detail es un array (errores de Pydantic)
-        if (Array.isArray(detail)) {
-          const errorMessages = detail.map(error => error.msg).join('. ');
-          setError(errorMessages);
-        } else if (typeof detail === 'string') {
-          setError(detail);
+        if (detail.includes('usuario')) {
+          setErrors(prev => ({ ...prev, username: detail }));
+        } else if (detail.includes('email') || detail.includes('Email')) {
+          setErrors(prev => ({ ...prev, email: detail }));
         } else {
-          setError('Error de validación en los datos ingresados');
+          setErrors(prev => ({ ...prev, general: detail }));
         }
-      } else if (err.response?.data?.detail) {
-        // Otros errores con detail string
-        setError(typeof err.response.data.detail === 'string' 
-          ? err.response.data.detail 
-          : 'Error al registrar usuario');
+      } else if (err.response?.status === 422 && err.response?.data?.detail) {
+        const detail = err.response.data.detail;
+        
+        if (Array.isArray(detail)) {
+          // Errores de validación de Pydantic
+          detail.forEach(error => {
+            const field = error.loc?.[1]; // nombre del campo
+            if (field && newErrors[field] !== undefined) {
+              newErrors[field] = error.msg;
+            } else {
+              newErrors.general = error.msg;
+            }
+          });
+          setErrors(prev => ({ ...prev, ...newErrors }));
+        } else {
+          setErrors(prev => ({ ...prev, general: detail }));
+        }
       } else {
-        setError('Error al registrar usuario. Intenta nuevamente.');
+        setErrors(prev => ({ ...prev, general: 'Error al registrar usuario. Intenta nuevamente.' }));
       }
-      console.error('Error de registro:', err.response?.data);
     } finally {
       setLoading(false);
     }
@@ -125,7 +157,7 @@ const Register = () => {
           <h1 className="register-title">Crear Cuenta</h1>
           <p className="register-subtitle">Únete a nuestra comunidad</p>
           
-          {error && <div className="register-error">{error}</div>}
+          {errors.general && <div className="form-error-general">{errors.general}</div>}
           
           <form onSubmit={handleSubmit} className="register-form">
             <div className="form-group">
@@ -136,10 +168,12 @@ const Register = () => {
                 name="full_name"
                 value={formData.full_name}
                 onChange={handleChange}
+                className={errors.full_name ? 'input-error' : ''}
                 required
                 placeholder="Tu nombre completo"
                 autoComplete="name"
               />
+              {errors.full_name && <span className="field-error">{errors.full_name}</span>}
             </div>
 
             <div className="form-group">
@@ -150,11 +184,13 @@ const Register = () => {
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
+                className={errors.username ? 'input-error' : ''}
                 required
                 placeholder="Elige un nombre de usuario"
                 autoComplete="username"
                 minLength={3}
               />
+              {errors.username && <span className="field-error">{errors.username}</span>}
             </div>
             
             <div className="form-group">
@@ -165,10 +201,12 @@ const Register = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
+                className={errors.email ? 'input-error' : ''}
                 required
                 placeholder="tu@email.com"
                 autoComplete="email"
               />
+              {errors.email && <span className="field-error">{errors.email}</span>}
             </div>
             
             <div className="form-group">
@@ -179,11 +217,13 @@ const Register = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
+                className={errors.password ? 'input-error' : ''}
                 required
-                placeholder="Mínimo 8 caracteres"
+                placeholder="Mínimo 8 caracteres, 1 mayúscula, 1 número"
                 autoComplete="new-password"
                 minLength={8}
               />
+              {errors.password && <span className="field-error">{errors.password}</span>}
             </div>
 
             <div className="form-group">
@@ -194,10 +234,12 @@ const Register = () => {
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
+                className={errors.confirmPassword ? 'input-error' : ''}
                 required
                 placeholder="Repite tu contraseña"
                 autoComplete="new-password"
               />
+              {errors.confirmPassword && <span className="field-error">{errors.confirmPassword}</span>}
             </div>
             
             <button type="submit" className="register-button" disabled={loading}>
