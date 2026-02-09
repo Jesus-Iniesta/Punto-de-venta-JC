@@ -1,9 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Header
+from fastapi import APIRouter, Depends, HTTPException, status, Header, Response, Cookie
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from datetime import timedelta, datetime
 from typing import Optional
 from app.core.config import settings
+from app.core.session import session_store
+from app.core.dependencies import get_current_user_from_session
 from app.core.security import (
     create_access_token, 
     create_refresh_token,
@@ -30,12 +32,12 @@ router = APIRouter()
 
 @router.post("/login", response_model=LoginResponse)
 def login(
-    db: Session = Depends(get_db),
-    form_data: OAuth2PasswordRequestForm = Depends()
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(get_db)
 ):
     """
     Iniciar sesión con username y password.
-    Retorna access_token JWT y información del usuario.
+    Retorna access_token JWT, información del usuario y crea sesión segura con cookie.
     """
     user = db.query(User).filter(User.username == form_data.username).first()
     
@@ -52,6 +54,7 @@ def login(
             detail="Usuario inactivo"
         )
     
+    # Crear JWT token (compatibilidad con frontend existente)
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
@@ -236,3 +239,26 @@ def reset_password(
     invalidate_token(reset_data.token)
     
     return {"message": "Contraseña actualizada correctamente"}
+
+@router.post("/logout")
+def logout(
+    response: Response,
+    session_id: Optional[str] = Cookie(None, alias="session_id")
+):
+    """
+    Cerrar sesión del usuario actual.
+    Elimina la sesión de Redis y borra la cookie.
+    """
+    # Eliminar sesión de Redis si existe
+    if session_id:
+        session_store.delete_session(session_id)
+    
+    # Borrar cookie
+    response.delete_cookie(
+        key="session_id",
+        httponly=True,
+        secure=False,
+        samesite="lax"
+    )
+    
+    return {"message": "Sesión cerrada exitosamente"}

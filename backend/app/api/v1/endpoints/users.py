@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from typing import List, Optional
@@ -8,8 +8,19 @@ from app.models.user import User as UserModel
 from app.schemas.user import User, UserCreate, UserUpdate
 from app.core.security import get_password_hash
 from app.core.dependencies import get_current_active_user, require_admin
+from pydantic import BaseModel, Field
 
 router = APIRouter()
+
+
+class RoleUpdate(BaseModel):
+    """Schema para actualizar solo el rol"""
+    role: str = Field(..., pattern="^(user|admin)$")
+
+
+class PasswordUpdate(BaseModel):
+    """Schema para actualizar contraseña"""
+    new_password: str = Field(..., min_length=8)
 
 
 @router.get(
@@ -27,16 +38,28 @@ def read_user_me(current_user: UserModel = Depends(get_current_active_user)):
     "/",
     response_model=List[User],
     summary="Listar usuarios",
-    description="Obtiene la lista de todos los usuarios. Requiere autenticación."
+    description="Obtiene la lista de todos los usuarios (solo admin). Permite búsqueda."
 )
 def read_users(
     skip: int = 0,
     limit: int = 100,
+    search: Optional[str] = Query(None, description="Buscar por username o email"),
     db: Session = Depends(get_db),
     current_user: UserModel = Depends(get_current_active_user)
 ):
-    """Lista todos los usuarios con paginación. Requiere estar autenticado."""
-    users = db.query(UserModel).offset(skip).limit(limit).all()
+    """Lista todos los usuarios con paginación y búsqueda opcional. Solo admin."""
+    require_admin(current_user)
+    
+    query = db.query(UserModel)
+    
+    if search:
+        search_term = f"%{search}%"
+        query = query.filter(
+            (UserModel.username.ilike(search_term)) | 
+            (UserModel.email.ilike(search_term))
+        )
+    
+    users = query.offset(skip).limit(limit).all()
     return users
 
 
@@ -256,13 +279,22 @@ def update_own_user(
         
 @router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_user(user_id: int, db: Session = Depends(get_db), current_user: UserModel = Depends(get_current_active_user)):
-    user = db.query(UserModel).filter(UserModel.id == user_id).first()
     require_admin(current_user)
+    
+    user = db.query(UserModel).filter(UserModel.id == user_id).first()
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Usuario no encontrado"
         )
+    
+    # No permitir que el admin se elimine a sí mismo
+    if user.id == current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No puedes eliminarte a ti mismo"
+        )
+    
     try:
         user.is_active = False
         db.commit()
@@ -273,3 +305,76 @@ def delete_user(user_id: int, db: Session = Depends(get_db), current_user: UserM
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Error interno del servidor al eliminar el usuario"
         )
+
+
+@router.put("/{user_id}/role", response_model=User)
+def update_user_role(
+    user_id: int,
+    role_data: RoleUpdate,
+    db: Session = Depends(get_db),
+    current_user: UserModel = Depends(get_current_active_user)
+):
+    """
+    Actualizar rol de usuario (solo admin).
+    No permite que el admin cambie su propio rol.
+    """
+    require_admin(current_user)
+    
+    user = db.query(UserModel).filter(UserModel.id == user_id).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Usuario no encontrado"
+        )
+    
+    # No permitir que el admin cambie su propio rol
+    if user.id == current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No puedes cambiar tu propio rol"
+        )
+    
+    user.role = role_data.role
+    db.commit()
+    db.refresh(user)
+    
+    return user
+
+
+@router.put("/{user_id}/password", response_model=User)
+def update_user_password(
+    user_id: int,
+    password_data: PasswordUpdate,
+    db: Session = Depends(get_db),
+    current_user: UserModel = Depends(get_current_active_user)
+):
+    """
+    Actualizar contraseña de usuario (solo admin).
+    """
+    require_admin(current_user)
+    
+    user = db.query(UserModel).filter(UserModel.id == user_id).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Usuario no encontrado"
+        )
+    
+    # Validar fortaleza de contraseña
+    if not any(c.isupper() for c in password_data.new_password):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="La contraseña debe tener al menos una mayúscula"
+        )
+    
+    if not any(c.isdigit() for c in password_data.new_password):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="La contraseña debe tener al menos un número"
+        )
+    
+    user.hashed_password = get_password_hash(password_data.new_password)
+    db.commit()
+    db.refresh(user)
+    
+    return user
