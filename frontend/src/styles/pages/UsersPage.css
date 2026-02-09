@@ -1,0 +1,255 @@
+.users-page {
+  min-height: calc(100vh - 60px);
+  background-color: var(--bg-primary);
+  padding: 2rem 1rem;
+}
+
+.users-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.users-header {
+  margin-bottom: 2rem;
+}
+
+.users-title {
+  font-size: 2rem;
+  color: var(--color-text);
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.search-box {
+  max-width: 400px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: white;
+  color: var(--color-text);
+  transition: all 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--color-cta);
+}
+
+.search-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.users-table-container {
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.users-table thead {
+  background-color: var(--bg-secondary);
+}
+
+.users-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--color-text);
+  font-size: 0.95rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.users-table tbody tr {
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color 0.2s ease;
+}
+
+.users-table tbody tr:hover {
+  background-color: var(--bg-secondary);
+}
+
+.users-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.users-table td {
+  padding: 1rem;
+  color: var(--color-text);
+  font-size: 0.95rem;
+}
+
+.role-select {
+  padding: 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background-color: white;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.role-select:focus {
+  outline: none;
+  border-color: var(--color-cta);
+}
+
+.role-select:hover {
+  border-color: var(--color-secondary);
+}
+
+.role-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--bg-secondary);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.status-active {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-inactive {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.btn-save,
+.btn-password,
+.btn-delete {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-save {
+  background-color: var(--color-cta);
+  color: white;
+}
+
+.btn-save:hover {
+  background-color: #d17f7f;
+  transform: translateY(-1px);
+}
+
+.btn-password {
+  padding: 0.5rem 1rem;
+  background-color: var(--color-secondary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-password:hover:not(:disabled) {
+  background-color: #6d9175;
+  transform: translateY(-1px);
+}
+
+.btn-password:active {
+  transform: translateY(0);
+}
+
+.btn-password:disabled,
+.btn-delete:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-delete {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-delete:hover:not(:disabled) {
+  background-color: #c82333;
+  transform: translateY(-1px);
+}
+
+.user-inactive {
+  opacity: 0.6;
+  background-color: #f9f9f9;
+}
+
+.loading,
+.error,
+.no-results {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--color-text);
+  font-size: 1.1rem;
+}
+
+.error {
+  color: var(--color-cta);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .users-page {
+    padding: 1rem 0.5rem;
+  }
+
+  .users-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .users-table-container {
+    overflow-x: auto;
+  }
+
+  .users-table {
+    min-width: 800px;
+  }
+
+  .users-table th,
+  .users-table td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .btn-save,
+  .btn-password,
+  .btn-delete {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    width: 100%;
+  }
+}

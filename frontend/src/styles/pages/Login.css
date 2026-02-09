@@ -79,6 +79,32 @@
   border: 1px solid rgba(220, 53, 69, 0.2);
 }
 
+/* Error general en la parte superior del formulario */
+.form-error-general {
+  background-color: rgba(220, 53, 69, 0.08);
+  color: var(--color-error);
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  text-align: center;
+  border: 1px solid rgba(220, 53, 69, 0.15);
+}
+
+/* Error específico de campo (debajo del input) */
+.field-error {
+  color: var(--color-error);
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+/* Input con error */
+.input-error {
+  border-color: var(--color-error) !important;
+  background-color: rgba(220, 53, 69, 0.03) !important;
+}
+
 .login-form {
   display: flex;
   flex-direction: column;
