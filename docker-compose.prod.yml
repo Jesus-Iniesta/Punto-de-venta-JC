@@ -5,7 +5,7 @@ services:
   db:
     image: postgres:15-alpine
     container_name: punto_venta_db_prod
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -20,13 +20,29 @@ services:
       timeout: 5s
       retries: 5
 
+  # Redis para sesiones
+  redis:
+    image: redis:7-alpine
+    container_name: punto_venta_redis_prod
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    networks:
+      - punto_venta_network
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
   # Backend FastAPI
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     container_name: punto_venta_backend_prod
-    restart: always
+    restart: unless-stopped
     expose:
       - "8000"
     environment:
@@ -36,12 +52,25 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - SECRET_KEY=${SECRET_KEY}
       - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    volumes:
+      - backend_uploads:/app/uploads
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
       - punto_venta_network
-    command: uvicorn main:app --host 0.0.0.0 --port 8000
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   # Frontend React con Nginx
   frontend:
@@ -49,16 +78,24 @@ services:
       context: ./frontend
       dockerfile: Dockerfile.prod
     container_name: punto_venta_frontend_prod
-    restart: always
+    restart: unless-stopped
     ports:
-      - "80:80"
+      - "${PORT:-80}:80"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     networks:
       - punto_venta_network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 volumes:
   postgres_data:
+  redis_data:
+  backend_uploads:
 
 networks:
   punto_venta_network:
