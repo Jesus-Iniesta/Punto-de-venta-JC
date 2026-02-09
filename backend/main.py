@@ -41,6 +41,6 @@ def read_root():
     return {"message": "Bienvenido a la API de Punto de Venta"}
 
 
-@app.get("/health")
+@app.api_route("/health", methods=["GET", "HEAD"])
 def health_check():
     return {"status": "healthy"}
