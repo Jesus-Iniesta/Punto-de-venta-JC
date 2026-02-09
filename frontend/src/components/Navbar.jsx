@@ -1,10 +1,16 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import AdminNavbar from './AdminNavbar';
 import '../styles/components/Navbar.css';
 
 const Navbar = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
+
+  // Usar AdminNavbar para usuarios admin
+  if (isAuthenticated() && isAdmin()) {
+    return <AdminNavbar />;
+  }
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -43,34 +49,7 @@ const Navbar = () => {
           
           {isAuthenticated() ? (
             <>
-              {/* Sección de Operaciones - Solo Admin */}
-              {isAdmin() && (
-                <div className="navbar-section">
-                  <button className="navbar-link" onClick={() => navigate('/sales')}>
-                    Ventas
-                  </button>
-                </div>
-              )}
-
-              {/* Sección de Gestión - Solo Admin */}
-              {isAdmin() && (
-                <div className="navbar-section navbar-admin">
-                  <button className="navbar-link" onClick={() => navigate('/admin/products/create')}>
-                    Productos
-                  </button>
-                  <button className="navbar-link" onClick={() => navigate('/sellers')}>
-                    Vendedores
-                  </button>
-                  <button className="navbar-link" onClick={() => navigate('/admin/users')}>
-                    Usuarios
-                  </button>
-                  <button className="navbar-link" onClick={() => navigate('/earnings')}>
-                    Ganancias
-                  </button>
-                </div>
-              )}
-
-              {/* Sección de Usuario */}
+              {/* Sección de Usuario - Solo para usuarios no admin */}
               <div className="navbar-section navbar-user">
                 <span className="navbar-username">{user?.full_name || user?.username}</span>
                 <button className="navbar-link navbar-logout" onClick={handleLogout}>
