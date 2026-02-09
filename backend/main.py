@@ -7,8 +7,8 @@ from app.db.database import engine
 from app.db.base import Base
 import os
 
-# Crear tablas
-Base.metadata.create_all(bind=engine)
+# NO crear tablas aquí - usar Alembic en producción
+# Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
