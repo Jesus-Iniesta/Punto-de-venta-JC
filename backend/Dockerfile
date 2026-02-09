@@ -28,11 +28,11 @@ RUN mkdir -p /app/uploads && chown -R appuser:appuser /app
 USER appuser
 
 # Exponer el puerto
-EXPOSE 8000
+EXPOSE 8085
 
 # Health check (usando wget con GET request)
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD wget --no-verbose --tries=1 -qO- http://localhost:8000/health > /dev/null || exit 1
+    CMD wget --no-verbose --tries=1 -qO- http://localhost:8085/health > /dev/null || exit 1
 
 # Comando para ejecutar la aplicación en PRODUCCIÓN (sin --reload)
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8085", "--workers", "4"]
