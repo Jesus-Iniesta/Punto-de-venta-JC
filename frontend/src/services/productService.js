@@ -24,7 +24,7 @@ api.interceptors.request.use(
 export const productService = {
   // Obtener todos los productos
   getAllProducts: async (skip = 0, limit = 100) => {
-    const response = await api.get(`/products?skip=${skip}&limit=${limit}`);
+    const response = await api.get(`/products/?skip=${skip}&limit=${limit}`);
     return response.data;
   },
 
@@ -36,7 +36,7 @@ export const productService = {
 
   // Crear producto
   createProduct: async (productData) => {
-    const response = await api.post('/products', productData);
+    const response = await api.post('/products/', productData);
     return response.data;
   },
 

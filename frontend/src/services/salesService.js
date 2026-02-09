@@ -23,7 +23,7 @@ api.interceptors.request.use(
 export const salesService = {
   // Crear una nueva venta
   createSale: async (saleData) => {
-    const response = await api.post('/sales', saleData);
+    const response = await api.post('/sales/', saleData);
     return response.data;
   },
 
@@ -38,7 +38,7 @@ export const salesService = {
     if (params.start_date) queryParams.append('start_date', params.start_date);
     if (params.end_date) queryParams.append('end_date', params.end_date);
     
-    const response = await api.get(`/sales?${queryParams.toString()}`);
+    const response = await api.get(`/sales/?${queryParams.toString()}`);
     return response.data;
   },
 

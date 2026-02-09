@@ -23,7 +23,7 @@ api.interceptors.request.use(
 export const sellersService = {
   // Obtener todos los vendedores
   getAllSellers: async (skip = 0, limit = 100) => {
-    const response = await api.get(`/sellers?skip=${skip}&limit=${limit}`);
+    const response = await api.get(`/sellers/?skip=${skip}&limit=${limit}`);
     return response.data;
   },
 
@@ -35,7 +35,7 @@ export const sellersService = {
 
   // Crear vendedor (solo admin)
   createSeller: async (sellerData) => {
-    const response = await api.post('/sellers', sellerData);
+    const response = await api.post('/sellers/', sellerData);
     return response.data;
   },
 

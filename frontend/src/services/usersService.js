@@ -24,7 +24,7 @@ export const usersService = {
   // Obtener todos los usuarios con búsqueda opcional
   getAllUsers: async (search = '') => {
     const params = search ? { search } : {};
-    const response = await api.get('/users', { params });
+    const response = await api.get('/users/', { params });
     return response.data;
   },
 
