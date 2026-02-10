@@ -25,6 +25,7 @@ const ProductPage = () => {
   const [formErrors, setFormErrors] = useState({});
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
+  const [showImageModal, setShowImageModal] = useState(false);
 
   useEffect(() => {
     loadProduct();
@@ -199,12 +200,21 @@ const ProductPage = () => {
         <div className="product-main">
           {/* Imagen */}
           <div className="product-image-section">
-            <div className="product-image-container">
+            <div 
+              className="product-image-container"
+              onClick={() => !isEditing && setShowImageModal(true)}
+              style={{ cursor: !isEditing ? 'pointer' : 'default' }}
+            >
               <img
                 src={imagePreview || 'https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=800'}
                 alt={product.name}
                 className="product-image"
               />
+              {!isEditing && (
+                <div className="image-zoom-hint">
+                  <span>🔍 Click para ampliar</span>
+                </div>
+              )}
             </div>
             {isEditing && (
               <div className="image-edit">
@@ -319,6 +329,29 @@ const ProductPage = () => {
         {/* Productos relacionados */}
         <RelatedProductsCarousel currentProductId={id} />
       </div>
+
+      {/* Modal de imagen ampliada */}
+      {showImageModal && (
+        <div 
+          className="image-modal-overlay" 
+          onClick={() => setShowImageModal(false)}
+        >
+          <div className="image-modal-content" onClick={(e) => e.stopPropagation()}>
+            <button 
+              className="image-modal-close" 
+              onClick={() => setShowImageModal(false)}
+              aria-label="Cerrar"
+            >
+              ✕
+            </button>
+            <img
+              src={imagePreview || 'https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=800'}
+              alt={product.name}
+              className="image-modal-img"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
