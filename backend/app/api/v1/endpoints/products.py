@@ -280,17 +280,24 @@ def update_product(
                 detail=f"Ya existe otro producto con el nombre '{product.name}'"
             )
     # Verificar precio si cambia o costo
-    if (product.price is not None or product.cost_price is not None):
+    if (product.price is not None and product.cost_price is not None):
         if product.price <= product.cost_price:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"El precio de venta ({product.price}) debe ser mayor al precio de costo ({product.cost_price})"
             )
-        if (product.cost_price < 0 or product.price < 0):
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="El precio y el costo no pueden ser negativos"
-            )
+    
+    # Validar que los valores no sean negativos
+    if product.cost_price is not None and product.cost_price < 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="El precio de costo no puede ser negativo"
+        )
+    if product.price is not None and product.price < 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="El precio de venta no puede ser negativo"
+        )
     
     try:
         # Obtener valores actuales o nuevos
